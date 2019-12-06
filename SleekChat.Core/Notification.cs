@@ -3,7 +3,6 @@ namespace SleekChat.Core.Entities
 {
     public class Notification
     {
-
         public Guid Id { get; set; }
 
         public Guid RecipientId { get; set; }

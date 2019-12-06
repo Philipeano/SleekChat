@@ -3,10 +3,6 @@ namespace SleekChat.Core.Entities
 {
     public class Message
     {
-        public Message()
-        {
-        }
-
         public Guid Id { get; set; }
 
         public string Content { get; set; }
