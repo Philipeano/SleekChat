@@ -6,8 +6,14 @@
 
   <ItemGroup>
     <Compile Remove="Class1.cs" />
+    <Compile Remove="Contracts\ISleekChatData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SleekChat.Core\SleekChat.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="InMemoryDataService\" />
+    <Folder Include="Contracts\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>
