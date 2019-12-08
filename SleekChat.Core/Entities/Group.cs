@@ -3,10 +3,6 @@ namespace SleekChat.Core.Entities
 {
     public class Group
     {
-        public Group()
-        {
-        }
-
         public Guid Id { get; set; }
 
         public Guid CreatorId { get; set; }

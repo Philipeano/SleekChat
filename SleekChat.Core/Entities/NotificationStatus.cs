@@ -1,5 +1,4 @@
-﻿using System;
-namespace SleekChat.Core.Entities
+﻿namespace SleekChat.Core.Entities
 {
     public enum NotificationStatus
     {

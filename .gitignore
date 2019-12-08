@@ -331,3 +331,6 @@ ASALocalRun/
 
 # MacOS hidden files
 *.DS_Store
+
+# Visual Studio Code hidden files
+*.vscode/
