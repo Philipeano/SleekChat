@@ -15,6 +15,5 @@ namespace SleekChat.Data.Contracts
         public User UpdateUser(User user);
 
         public void DeleteUser(Guid userId);
-
     }
 }

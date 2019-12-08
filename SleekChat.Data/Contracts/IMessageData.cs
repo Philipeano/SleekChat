@@ -6,14 +6,18 @@ namespace SleekChat.Data.Contracts
 {
     public interface IMessageData
     {
-        public Message CreateNewMessage(Guid messageId, string content, string status, string priority, Guid senderId, Guid groupId, DateTime dateCreated);
+        public Message CreateNewMessage(string content, Guid senderId, Guid groupId, MessageStatus status, PriorityLevel priority);
 
         public IEnumerable<Message> GetAllMessages();
 
+        public Message GetMessageById(Guid messageId);
+
         public IEnumerable<Message> GetGroupMessages(Guid groupId);
 
-        public bool IsMessageSender(Guid messageId, Guid userId);
+        public Message UpdateMessage(Message message);
 
-        public string DeleteMessage(Guid messageId);
+        public void DeleteMessage(Guid messageId);
+
+        public bool IsMessageSender(Guid messageId, Guid userId);
     }
 }

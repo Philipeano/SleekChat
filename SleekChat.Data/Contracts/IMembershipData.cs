@@ -6,14 +6,16 @@ namespace SleekChat.Data.Contracts
 {
     public interface IMembershipData
     {
-        public Membership AddGroupMember(Guid membershipId, Guid groupId, Guid memberId, string memberRole, DateTime dateCreated);
+        public Membership AddGroupMember(Guid groupId, Guid memberId, string memberRole);
 
         public IEnumerable<Membership> GetAllMemberships();
 
         public IEnumerable<Membership> GetGroupMemberships(Guid groupId);
 
-        public bool IsGroupMember(Guid groupId, Guid userId);
+        public IEnumerable<Membership> GetMembershipsForAUser(Guid userId);
 
-        public string RemoveGroupMember(Guid groupId, Guid userId);
+        public void RemoveGroupMember(Guid groupId, Guid userId);
+
+        public bool IsGroupMember(Guid groupId, Guid userId);
     }
 }

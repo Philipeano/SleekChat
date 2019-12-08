@@ -9,7 +9,7 @@ namespace SleekChat.Core.Entities
 
         public Guid MemberId { get; set; }
 
-        public string UserRole { get; set; }
+        public string MemberRole { get; set; }
 
         public DateTime DateCreated { get; set; }
     }
