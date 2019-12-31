@@ -5,7 +5,7 @@ using SleekChat.Core.Entities;
 using SleekChat.Data.Contracts;
 using SleekChat.Data.Helpers;
 
-namespace SleekChat.Data.InMemorySleekChatData
+namespace SleekChat.Data.InMemoryDataService
 {
     public class UserData : IUserData
     {
@@ -42,18 +42,29 @@ namespace SleekChat.Data.InMemorySleekChatData
             return users.SingleOrDefault(u => u.Id == userId);
         }
 
-        public User UpdateUser(User user)
+        public bool UsernameAlreadyTaken(string username, out User matchingUser)
         {
-            User updatedUser = new User { };
-            users.Where(u => u.Id == user.Id)
-                       .Select(u => {
-                           u.Username = user.Username;
-                           u.Email = user.Email;
-                           u.Password = user.Password;
-                           u.IsActive = user.IsActive;
-                           updatedUser = u;
-                           return u; })
-                       .ToList();
+            matchingUser = users.SingleOrDefault(u => u.Username == username);
+            return matchingUser != null;
+        }
+
+        public bool EmailAlreadyTaken(string email, out User matchingUser)
+        {
+            matchingUser = users.SingleOrDefault(u => u.Email == email);
+            return matchingUser != null;
+        }
+
+        public User UpdateUser(Guid id, string username, string email, string password, out User updatedUser)
+        {
+            IEnumerable<User> query = users.Where(u => u.Id == id)
+                       .Select(u =>
+                       {
+                           u.Username = username;
+                           u.Email = email;
+                           u.Password = password;
+                           return u;
+                       });
+            updatedUser = query.First();
             return updatedUser;
         }
 
@@ -61,6 +72,5 @@ namespace SleekChat.Data.InMemorySleekChatData
         {
             users.RemoveAll(u => u.Id == userId);
         }
-
     }
 }

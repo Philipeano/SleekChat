@@ -15,5 +15,13 @@ namespace SleekChat.Core.Entities
 
         public DateTime DateCreated { get; set; }
 
+        public void Deconstruct(out Guid id, out string title, out string purpose, out Guid creatorId, out DateTime created)
+        {
+            id = Id;
+            title = Title;
+            purpose = Purpose;
+            creatorId = CreatorId;
+            created = DateCreated;
+        }
     }
 }
