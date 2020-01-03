@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SleekChat.Core.Entities;
 using SleekChat.Data.Contracts;
@@ -125,9 +127,9 @@ namespace SleekChat.Api.Controllers
 
             if (!groupData.IsGroupCreator(Guid.Parse(id), Guid.Parse(userId)))
             {
-                Microsoft.AspNetCore.Authentication.AuthenticationProperties properties = new Microsoft.AspNetCore.Authentication.AuthenticationProperties { };
-                properties.Items.Add("error", "You are not the creator of this group.");
-                return Forbid(properties);
+                formatter.RenderJson(validator.Result("You are not the creator of this group."), out string responseTxt);
+                Forbid(Response, responseTxt);
+                return null;
             }
 
             Guid reqGroupId = Guid.Parse(id);
@@ -164,13 +166,24 @@ namespace SleekChat.Api.Controllers
 
             if (!groupData.IsGroupCreator(Guid.Parse(id), Guid.Parse(userId)))
             {
-                Microsoft.AspNetCore.Authentication.AuthenticationProperties properties = new Microsoft.AspNetCore.Authentication.AuthenticationProperties { };
-                properties.Items.Add("error", "You are not the creator of this group.");
-                return Forbid(properties);
+                formatter.RenderJson(validator.Result("You are not the creator of this group."), out string responseTxt);
+                Forbid(Response, responseTxt);
+                return null;
             }
 
             groupData.DeleteGroup(Guid.Parse(id));
             return Ok(formatter.Render(null, "Group", Operation.Deleted));
+        }
+
+        // Custom method for 403 response
+        public void Forbid(HttpResponse responseObj, string responseJson)
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+            responseObj.StatusCode = 403;
+            responseObj.ContentType = "application/json";
+            _ = responseObj.WriteAsync(responseJson, System.Text.Encoding.Default, token);
+            source.Dispose();
         }
     }
 }
