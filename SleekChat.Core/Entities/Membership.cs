@@ -12,5 +12,14 @@ namespace SleekChat.Core.Entities
         public string MemberRole { get; set; }
 
         public DateTime DateCreated { get; set; }
+
+        public void Deconstruct(out Guid id, out Guid groupId, out Guid memberId, out string role, out DateTime joined)
+        {
+            id = Id;
+            groupId = GroupId;
+            memberId = MemberId;
+            role = MemberRole;
+            joined = DateCreated;
+        }
     }
 }

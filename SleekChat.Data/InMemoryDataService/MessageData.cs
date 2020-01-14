@@ -11,13 +11,17 @@ namespace SleekChat.Data.InMemoryDataService
     {
 
         private readonly List<Message> messages;
+        private readonly IMembershipData membershipData;
+        private readonly INotificationData notificationData;
 
-        public MessageData()
+        public MessageData(IMembershipData membershipData, INotificationData notificationData)
         {
             messages = new List<Message> { };
+            this.membershipData = membershipData;
+            this.notificationData = notificationData;
         }
 
-        public Message CreateNewMessage(string content, Guid senderId, Guid groupId, MessageStatus status = MessageStatus.Visible, PriorityLevel priority = PriorityLevel.Normal)
+        public Message CreateNewMessage(string content, Guid senderId, Guid groupId, PriorityLevel priority, MessageStatus status = MessageStatus.Visible)
         {
             Message newMessage = new Message
             {
@@ -30,7 +34,20 @@ namespace SleekChat.Data.InMemoryDataService
                 DateCreated = DateTime.Now
             };
             messages.Add(newMessage);
+
+            // Create a notification for each group member except the message sender
+            NotifyGroupMembers(groupId, newMessage, out _);
             return newMessage;
+        }
+
+        public void NotifyGroupMembers(Guid groupId, Message message, out int recipientCount)
+        {
+            IEnumerable<Membership> groupMemberships = membershipData.GetAllMemberships().Where(m => m.GroupId == groupId && m.MemberId != message.SenderId);
+            foreach (Membership membership in groupMemberships)
+            {
+                notificationData.CreateNewNotification(membership.MemberId, message.Id, NotificationStatus.Unread, DateTime.Now);
+            } 
+            recipientCount = groupMemberships.Count();
         }
 
         public IEnumerable<Message> GetAllMessages()
@@ -38,9 +55,9 @@ namespace SleekChat.Data.InMemoryDataService
             return messages;
         }
 
-        public Message GetMessageById(Guid messageId)
+        public IEnumerable<Message> GetAllMessagesFromAUser(Guid senderId)
         {
-            return messages.SingleOrDefault(m => m.Id == messageId);
+            return messages.FindAll(m => m.SenderId == senderId);
         }
 
         public IEnumerable<Message> GetGroupMessages(Guid groupId)
@@ -48,19 +65,31 @@ namespace SleekChat.Data.InMemoryDataService
             return messages.FindAll(m => m.GroupId == groupId);
         }
 
-        public Message UpdateMessage(Message message)
+        public Message GetGroupMessageById(Guid groupId, Guid messageId) 
         {
-            Message updatedMessage = new Message { };
-            messages.Where(m => m.Id == message.Id)
+            return messages.SingleOrDefault(m => m.GroupId == groupId && m.Id == messageId);
+        }
+
+        public IEnumerable<Message> GetGroupMessagesFromAUser(Guid groupId, Guid senderId)
+        {
+            return messages.FindAll(m => m.GroupId == groupId && m.SenderId == senderId);
+        }
+
+        public Message GetMessageById(Guid messageId)
+        {
+            return messages.SingleOrDefault(m => m.Id == messageId);
+        }
+
+        public Message UpdateMessage(Guid id, string content, PriorityLevel priority, out Message updatedMessage)
+        {
+            IEnumerable<Message> query = messages.Where(m => m.Id == id)
                        .Select(m =>
                        {
-                           m.Content = message.Content;
-                           m.Status = message.Status;
-                           m.Priority = message.Priority;
-                           updatedMessage = m;
+                           m.Content = content;
+                           m.Priority = priority;
                            return m;
-                       })
-                       .ToList();
+                       });
+            updatedMessage = query.First();
             return updatedMessage;
         }
 

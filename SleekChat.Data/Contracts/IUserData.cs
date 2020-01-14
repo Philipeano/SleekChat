@@ -12,8 +12,12 @@ namespace SleekChat.Data.Contracts
 
         public User GetUserById(Guid userId);
 
-        public User UpdateUser(User user);
+        public User UpdateUser(Guid id, string username, string email, string password, out User updatedUser);
 
         public void DeleteUser(Guid userId);
+
+        public bool UsernameAlreadyTaken(string username, out User matchingUser);
+
+        public bool EmailAlreadyTaken(string email, out User matchingUser);
     }
 }

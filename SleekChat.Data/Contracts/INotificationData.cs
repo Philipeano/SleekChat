@@ -6,10 +6,18 @@ namespace SleekChat.Data.Contracts
 {
     public interface INotificationData
     {
-        public Notification CreateNewNotification(Guid notificationId, Guid recipientId, Guid messageId, string status, DateTime dateCreated);
+        public Notification CreateNewNotification(Guid recipientId, Guid messageId, NotificationStatus status, DateTime dateCreated);
 
-        public IEnumerable<Notification> GetNotificationsForUser(Guid userId);
+        public IEnumerable<Notification> GetAllNotifications();
 
-        public string DeleteNotification(Guid notificationId);
+        public IEnumerable<Notification> GetNotificationsForAUser(Guid userId);
+
+        public Notification GetNotificationById(Guid notificationId);
+
+        public Notification UpdateNotification(Guid id, NotificationStatus status, out Notification updatedNotification);
+
+        public void DeleteNotification(Guid notificationId);
+
+        public bool IsNotificationRecipient(Guid notificationId, Guid userId);
     }
 }

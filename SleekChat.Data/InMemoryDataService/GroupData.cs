@@ -10,10 +10,12 @@ namespace SleekChat.Data.InMemoryDataService
     public class GroupData : IGroupData
     {
         private readonly List<Group> groups;
+        private readonly IMembershipData membershipData;
 
-        public GroupData()
+        public GroupData(IMembershipData membershipData)
         {
             groups = new List<Group> { };
+            this.membershipData = membershipData;
         }
 
         public Group CreateNewGroup(Guid creatorId, string title, string purpose, bool isActive = true)
@@ -28,6 +30,9 @@ namespace SleekChat.Data.InMemoryDataService
                 DateCreated = DateTime.Now
             };
             groups.Add(newGroup);
+
+            // Add creator as group member
+            _ = membershipData.AddGroupMember(newGroup.Id, creatorId, "Creator");
             return newGroup;            
         }
 
@@ -41,18 +46,17 @@ namespace SleekChat.Data.InMemoryDataService
             return groups.SingleOrDefault(g => g.Id == groupId);
         }
 
-        public Group UpdateGroup(Group group)
+        public Group UpdateGroup(Guid id, string title, string purpose, bool isActive, out Group updatedGroup)
         {
-            Group updatedGroup = new Group { };
-            groups.Where(g => g.Id == group.Id)
-                       .Select(g => {
-                           g.Title = group.Title;
-                           g.Purpose = group.Purpose;
-                           g.IsActive = group.IsActive;
-                           updatedGroup = g;
+            IEnumerable<Group> query = groups.Where(g => g.Id == id)
+                       .Select(g =>
+                       {
+                           g.Title = title;
+                           g.Purpose = purpose;
+                           g.IsActive = isActive;
                            return g;
-                       })
-                       .ToList();
+                       });
+            updatedGroup = query.First();
             return updatedGroup;
         }
 
@@ -66,8 +70,12 @@ namespace SleekChat.Data.InMemoryDataService
             return (groups.SingleOrDefault(g => g.Id == groupId && g.CreatorId == userId) != null);
         }
 
+        public bool TitleAlreadyTaken(string title, out Group matchingGroup)
+        {
+            matchingGroup = groups.SingleOrDefault(g => g.Title == title);
+            return matchingGroup != null;
+        }
     }
-
 }
 
 
