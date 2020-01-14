@@ -34,15 +34,15 @@ namespace SleekChat.Api.Controllers
             return Ok(formatter.Render(groupData.GetAllGroups(), "Groups", Operation.Retrieved));
         }
 
-        // GET api/groups/id
+        // GET: api/groups/id
         [HttpGet("{id}")]
         public ActionResult Get(string id)
         {
-            validationResult = validator.IsBlank("Group Id", id);
+            validationResult = validator.IsBlank("group Id", id);
             if (validationResult.Key == false)
                 return BadRequest(formatter.Render(validationResult));
 
-            validationResult = validator.IsValidGuid("Group Id", id);
+            validationResult = validator.IsValidGuid("group Id", id);
             if (validationResult.Key == false)
                 return BadRequest(formatter.Render(validationResult));
 
@@ -53,9 +53,9 @@ namespace SleekChat.Api.Controllers
             return Ok(formatter.Render(group, "Group", Operation.Retrieved));
         }
 
-        // POST api/groups
+        // POST: api/groups
         [HttpPost]
-        public ActionResult Post([FromBody]Request reqBody, [FromHeader] string userId)
+        public ActionResult Post([FromBody]RequestBody reqBody, [FromHeader] string userId)
         {
             (string title, string purpose, _) = reqBody;
 
@@ -86,18 +86,17 @@ namespace SleekChat.Api.Controllers
             return Created("", formatter.Render(newGroup, "Group", Operation.Created));
         }
 
-
-        // PUT api/groups/id
+        // PUT: api/groups/id
         [HttpPut("{id}")]
-        public ActionResult Put([FromRoute] string id, [FromBody]Request reqBody, [FromHeader] string userId)
+        public ActionResult Put([FromRoute] string id, [FromBody]RequestBody reqBody, [FromHeader] string userId)
         {
             (string title, string purpose, bool isActive) = reqBody;
 
-            validationResult = validator.IsBlank("Group Id", id);
+            validationResult = validator.IsBlank("group id", id);
             if (validationResult.Key == false)
                 return BadRequest(formatter.Render(validationResult));
 
-            validationResult = validator.IsValidGuid("Group Id", id);
+            validationResult = validator.IsValidGuid("group id", id);
             if (validationResult.Key == false)
                 return BadRequest(formatter.Render(validationResult));
 
@@ -137,27 +136,26 @@ namespace SleekChat.Api.Controllers
                 return Conflict(formatter.Render(validator.Result($"The title '{title}' is already in use by another group.")));
 
             groupData.UpdateGroup(reqGroupId, title, purpose, isActive, out Group updatedGroup);
-
             return Ok(formatter.Render(updatedGroup, "Group", Operation.Updated));
         }
 
-        // DELETE api/groups/id
+        // DELETE: api/groups/id
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] string id, [FromHeader] string userId)
         {
-            validationResult = validator.IsBlank("User Id", userId);
+            validationResult = validator.IsBlank("user id", userId);
             if (validationResult.Key == false)
                 return BadRequest(formatter.Render(validationResult));
 
-            validationResult = validator.IsValidGuid("User Id", userId);
+            validationResult = validator.IsValidGuid("user id", userId);
             if (validationResult.Key == false)
                 return BadRequest(formatter.Render(validationResult));
 
-            validationResult = validator.IsBlank("Group Id", id);
+            validationResult = validator.IsBlank("group id", id);
             if (validationResult.Key == false)
                 return BadRequest(formatter.Render(validationResult));
 
-            validationResult = validator.IsValidGuid("Group Id", id);
+            validationResult = validator.IsValidGuid("group id", id);
             if (validationResult.Key == false)
                 return BadRequest(formatter.Render(validationResult));
 

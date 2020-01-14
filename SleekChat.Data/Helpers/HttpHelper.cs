@@ -15,11 +15,13 @@ namespace SleekChat.Data.Helpers
         Created,
         Retrieved,
         Updated,
-        Deleted
+        Deleted,
+        Registered,
+        Posted
     }
 
 
-    public class Response
+    public class ResponseBody
     {
         public string Status { get; set; }
         public string Message { get; set; }
@@ -29,7 +31,7 @@ namespace SleekChat.Data.Helpers
     }
 
 
-    public class Request
+    public class RequestBody
     {
         public string Id { get; set; }
         public string Username { get; set; }
@@ -45,7 +47,7 @@ namespace SleekChat.Data.Helpers
         public string CreatorId { get; set; }
         public string MemberRole { get; set; }
         public string Content { get; set; }
-        public PriorityLevel Priority { get; set; }
+        public string Priority { get; set; }
         public string NotificationStatus { get; set; }
         public string SenderId { get; set; }
 
@@ -69,14 +71,17 @@ namespace SleekChat.Data.Helpers
         }
 
         // Request body for ..api/Memberships
-        public void Deconstruct(out string memberId, out string role)
+        public void Deconstruct(out string memberId, out string role, out string groupId, out bool isDefaultMember)
         {
             memberId = MemberId;
             role = MemberRole;
+            groupId = null;
+            isDefaultMember = false;
         }
 
         // Request body for ..api/Messages
-        public void Deconstruct(out string content, out PriorityLevel priority)
+        // public void Deconstruct(out string content, out PriorityLevel priority)
+        public void Deconstruct(out string content, out string priority)
         {
             //HINT: Pass senderId in request header as userId 
             content = Content;

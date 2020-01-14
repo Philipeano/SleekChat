@@ -49,9 +49,9 @@ namespace SleekChat.Api.Controllers
             return Ok(formatter.Render(user, "User", Operation.Retrieved));
         }
 
-        // POST api/users
+        // POST: api/users
         [HttpPost]
-        public ActionResult Post([FromBody]Request reqBody)
+        public ActionResult Post([FromBody] RequestBody reqBody)
         {
             (string username, string email, string password, string cPassword, _) = reqBody;
 
@@ -78,12 +78,12 @@ namespace SleekChat.Api.Controllers
                 return Conflict(formatter.Render(validator.Result($"The email address '{email}' is already in use.")));
 
             User newUser = userData.CreateNewUser(username, email, cPassword, true);
-            return Created("", formatter.Render(newUser, "User", Operation.Created));
+            return Created("", formatter.Render(newUser, "User", Operation.Registered));
         }
 
-        // PUT api/users/id
+        // PUT: api/users/id
         [HttpPut("{id}")]
-        public ActionResult Put([FromRoute] string id, [FromBody]Request reqBody)
+        public ActionResult Put([FromRoute] string id, [FromBody] RequestBody reqBody)
         {
             (string username, string email, string password, string cPassword, _) = reqBody;
 
@@ -126,7 +126,7 @@ namespace SleekChat.Api.Controllers
             return Ok(formatter.Render(updatedUser, "User", Operation.Updated));
         }
 
-        // DELETE api/users/id
+        // DELETE: api/users/id
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] string id)
         {

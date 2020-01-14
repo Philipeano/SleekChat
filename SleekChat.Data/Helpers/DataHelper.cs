@@ -24,6 +24,30 @@ namespace SleekChat.Data.Helpers
             // Perform decryption here
             return decryptedText;
         }
+        public static PriorityLevel GetPriority(string priority)
+        {
+            switch (priority)
+            {
+                case "Critical":
+                    return PriorityLevel.Critical;
+                case "Urgent":
+                    return PriorityLevel.Urgent;
+                default:
+                    return PriorityLevel.Normal;
+            }
+        }
+        public static NotificationStatus GetStatus(string status)
+        {
+            switch (status)
+            {
+                case "Read":
+                    return NotificationStatus.Read;
+                case "Archived":
+                    return NotificationStatus.Archived;
+                default:
+                    return NotificationStatus.Unread;
+            }
+        }        
     }
 
 
@@ -57,10 +81,10 @@ namespace SleekChat.Data.Helpers
     {
         public Guid Id { get; set; }
         public string Content { get; set; }
-        public MessageStatus Status { get; set; }
-        public PriorityLevel Priority { get; set; }
-        public Guid SenderId { get; set; }
+        public string Status { get; set; }
+        public string Priority { get; set; }
         public Guid GroupId { get; set; }
+        public Guid SenderId { get; set; }
         public DateTime Sent { get; set; }
     }
 
@@ -69,7 +93,7 @@ namespace SleekChat.Data.Helpers
         public Guid Id { get; set; }
         public Guid RecipientId { get; set; }
         public Guid MessageId { get; set; }
-        public NotificationStatus Status { get; set; }
+        public string Status { get; set; }
         public DateTime Received { get; set; }
     }
 

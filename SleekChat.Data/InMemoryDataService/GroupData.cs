@@ -10,10 +10,12 @@ namespace SleekChat.Data.InMemoryDataService
     public class GroupData : IGroupData
     {
         private readonly List<Group> groups;
+        private readonly IMembershipData membershipData;
 
-        public GroupData()
+        public GroupData(IMembershipData membershipData)
         {
             groups = new List<Group> { };
+            this.membershipData = membershipData;
         }
 
         public Group CreateNewGroup(Guid creatorId, string title, string purpose, bool isActive = true)
@@ -30,9 +32,7 @@ namespace SleekChat.Data.InMemoryDataService
             groups.Add(newGroup);
 
             // Add creator as group member
-            MembershipData membershipData = new MembershipData();
             _ = membershipData.AddGroupMember(newGroup.Id, creatorId, "Creator");
-
             return newGroup;            
         }
 

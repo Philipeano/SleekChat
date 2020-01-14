@@ -25,6 +25,9 @@ namespace SleekChat
 
             services.AddSingleton<IUserData, UserData>();
             services.AddSingleton<IGroupData, GroupData>();
+            services.AddSingleton<IMembershipData, MembershipData>();
+            services.AddSingleton<IMessageData, MessageData>();
+            services.AddSingleton<INotificationData, NotificationData>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

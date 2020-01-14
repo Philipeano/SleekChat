@@ -6,9 +6,9 @@ namespace SleekChat.Data.Helpers
     public class FormatHelper
     {
 
-        public Response Render(dynamic output, string outputType, Operation operation)
+        public ResponseBody Render(dynamic output, string outputType, Operation operation)
         {
-            Response response = new Response
+            ResponseBody response = new ResponseBody
             {
                 Status = "normal",
                 Message = $"{outputType} {operation.ToString().ToLower()} successfully!",
@@ -18,9 +18,9 @@ namespace SleekChat.Data.Helpers
         }
 
 
-        public Response Render(KeyValuePair<bool, string> validationResult)
+        public ResponseBody Render(KeyValuePair<bool, string> validationResult)
         {
-            Response response = new Response
+            ResponseBody response = new ResponseBody
             {
                 Status = "error",
                 Message = validationResult.Value,
@@ -48,18 +48,18 @@ namespace SleekChat.Data.Helpers
                     result = new SimplifiedGroup();
                     (result.Id, result.Title, result.Purpose, result.CreatorId, result.Created) = (Group)item;
                     break;
-                    //case "Membership":
-                    //    result = new SimplifiedMembership();
-                    //    (result.Id, result.GroupId, result.MemberId, result.MemberRole, result.Joined) = (Membership)item;
-                    //    break;
-                    //case "Message":
-                    //    result = new SimplifiedMessage();
-                    //    (result.Id, result.Content, result.Status, result.Priority, result.SenderId, result.GroupId, result.Sent) = (Message)item;
-                    //    break;
-                    //case "Notification":
-                    //    result = new SimplifiedNotification();
-                    //    (result.Id, result.RecipientId, result.MessageId, result.Status, result.Received) = (Message)item;
-                    //    break;
+                case "Membership":
+                    result = new SimplifiedMembership();
+                    (result.Id, result.GroupId, result.MemberId, result.MemberRole, result.Joined) = (Membership)item;
+                    break;
+                case "Message":
+                    result = new SimplifiedMessage();
+                    (result.Id, result.Content, result.Status, result.Priority, result.GroupId, result.SenderId, result.Sent) = (Message)item;
+                    break;
+                case "Notification":
+                    result = new SimplifiedNotification();
+                    (result.Id, result.RecipientId, result.MessageId, result.Status, result.Received) = (Notification)item;
+                    break;
             }
             return result;
         }

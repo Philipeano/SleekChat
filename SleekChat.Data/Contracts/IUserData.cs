@@ -19,9 +19,5 @@ namespace SleekChat.Data.Contracts
         public bool UsernameAlreadyTaken(string username, out User matchingUser);
 
         public bool EmailAlreadyTaken(string email, out User matchingUser);
-
-        //public bool UsernameAlreadyTaken(string username);
-
-        //public bool EmailAlreadyTaken(string email);
     }
 }
