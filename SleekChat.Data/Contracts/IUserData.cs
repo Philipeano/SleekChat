@@ -20,4 +20,5 @@ namespace SleekChat.Data.Contracts
 
         public bool EmailAlreadyTaken(string email, out User matchingUser);
     }
+
 }
