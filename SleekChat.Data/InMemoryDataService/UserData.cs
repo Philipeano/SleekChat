@@ -61,7 +61,7 @@ namespace SleekChat.Data.InMemoryDataService
                        {
                            u.Username = username;
                            u.Email = email;
-                           u.Password = password;
+                           u.Password = DataHelper.Encrypt(password);
                            return u;
                        });
             updatedUser = query.First();

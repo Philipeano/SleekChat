@@ -1,0 +1,87 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using SleekChat.Core.Entities;
+using SleekChat.Data.Contracts;
+using SleekChat.Data.Helpers;
+
+namespace SleekChat.Data.SqlServerDataService
+{
+    public class SqlUserData : IUserData
+    {
+        private readonly SleekChatDbContext dbcontext;
+
+        public SqlUserData(SleekChatDbContext dbcontext)
+        {
+            this.dbcontext = dbcontext;
+        }
+
+        public User CreateNewUser(string username, string email, string password, bool isActive)
+        {
+            User newUser = new User
+            {
+                Id = DataHelper.GetGuid(),
+                Username = username,
+                Email = email,
+                Password = DataHelper.Encrypt(password),
+                IsActive = isActive,
+                DateCreated = DateTime.Now
+            };
+            dbcontext.Users.Add(newUser);
+            Commit();
+            return newUser;
+        }
+
+        public IEnumerable<User> GetAllUsers()
+        {
+            return dbcontext.Users;
+        }
+
+        public User GetUserById(Guid userId)
+        {
+            return dbcontext.Users.SingleOrDefault(u => u.Id == userId);
+        }
+
+        public bool UsernameAlreadyTaken(string username, out User matchingUser)
+        {
+            matchingUser = dbcontext.Users.SingleOrDefault(u => u.Username == username);
+            return matchingUser != null;
+        }
+
+        public bool EmailAlreadyTaken(string email, out User matchingUser)
+        {
+            matchingUser = dbcontext.Users.SingleOrDefault(u => u.Email == email);
+            return matchingUser != null;
+        }
+
+        public User UpdateUser(Guid id, string username, string email, string password, out User updatedUser)
+        {
+            updatedUser = GetUserById(id);
+            updatedUser.Username = username;
+            updatedUser.Email = email;
+            updatedUser.Password = DataHelper.Encrypt(password);
+
+            EntityEntry<User> userEntity = dbcontext.Users.Attach(updatedUser);
+            userEntity.State = EntityState.Modified;
+            Commit();
+            return updatedUser;
+        }
+
+        public void DeleteUser(Guid userId)
+        {
+            User user = GetUserById(userId);
+            if (user != null)
+            {
+                dbcontext.Users.Remove(user);
+                Commit();
+            }
+        }
+
+        public int Commit()
+        {
+            return dbcontext.SaveChanges();
+        }
+    }
+}
