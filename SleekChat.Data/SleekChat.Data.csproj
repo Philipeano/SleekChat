@@ -28,4 +28,7 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="SleekChat.Data.csproj" />
+  </ItemGroup>
 </Project>

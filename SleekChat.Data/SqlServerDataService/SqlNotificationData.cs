@@ -11,9 +11,9 @@ namespace SleekChat.Data.SqlServerDataService
 {
     public class SqlNotificationData : INotificationData
     {
-        private readonly SleekChatDbContext dbcontext;
+        private readonly SleekChatContext dbcontext;
 
-        public SqlNotificationData(SleekChatDbContext dbcontext)
+        public SqlNotificationData(SleekChatContext dbcontext)
         {
             this.dbcontext = dbcontext;
         }
@@ -29,7 +29,7 @@ namespace SleekChat.Data.SqlServerDataService
                 DateCreated = DateTime.Now
             };
             dbcontext.Notifications.Add(newNotification);
-            Commit();
+            //Commit();
             return newNotification;
         }
 

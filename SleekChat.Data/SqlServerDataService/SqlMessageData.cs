@@ -11,11 +11,11 @@ namespace SleekChat.Data.SqlServerDataService
 {
     public class SqlMessageData : IMessageData
     {
-        private readonly SleekChatDbContext dbcontext;
+        private readonly SleekChatContext dbcontext;
         private readonly IMembershipData membershipData;
         private readonly INotificationData notificationData;
 
-        public SqlMessageData(SleekChatDbContext dbcontext, IMembershipData membershipData, INotificationData notificationData)
+        public SqlMessageData(SleekChatContext dbcontext, IMembershipData membershipData, INotificationData notificationData)
         {
             this.dbcontext = dbcontext;
             this.membershipData = membershipData;

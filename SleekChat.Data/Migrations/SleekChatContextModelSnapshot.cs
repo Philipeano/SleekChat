@@ -8,8 +8,8 @@ using SleekChat.Data.SqlServerDataService;
 
 namespace SleekChat.Data.Migrations
 {
-    [DbContext(typeof(SleekChatDbContext))]
-    partial class SleekChatDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(SleekChatContext))]
+    partial class SleekChatContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,7 @@ namespace SleekChat.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("GroupId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CreatorId")
@@ -42,6 +43,8 @@ namespace SleekChat.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatorId");
+
                     b.ToTable("Groups");
                 });
 
@@ -49,6 +52,7 @@ namespace SleekChat.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("MembershipId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateCreated")
@@ -65,6 +69,10 @@ namespace SleekChat.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("MemberId");
+
                     b.ToTable("Memberships");
                 });
 
@@ -72,6 +80,7 @@ namespace SleekChat.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("MessageId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
@@ -94,6 +103,10 @@ namespace SleekChat.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("SenderId");
+
                     b.ToTable("Messages");
                 });
 
@@ -101,6 +114,7 @@ namespace SleekChat.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("NotificationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateCreated")
@@ -117,6 +131,10 @@ namespace SleekChat.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MessageId");
+
+                    b.HasIndex("RecipientId");
+
                     b.ToTable("Notifications");
                 });
 
@@ -124,6 +142,7 @@ namespace SleekChat.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnName("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DateCreated")
@@ -144,6 +163,60 @@ namespace SleekChat.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SleekChat.Core.Entities.Group", b =>
+                {
+                    b.HasOne("SleekChat.Core.Entities.User", "Creator")
+                        .WithMany("CreatedGroups")
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SleekChat.Core.Entities.Membership", b =>
+                {
+                    b.HasOne("SleekChat.Core.Entities.Group", "Group")
+                        .WithMany("Memberships")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SleekChat.Core.Entities.User", "Member")
+                        .WithMany("Memberships")
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SleekChat.Core.Entities.Message", b =>
+                {
+                    b.HasOne("SleekChat.Core.Entities.Group", "Group")
+                        .WithMany("Messages")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SleekChat.Core.Entities.User", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SleekChat.Core.Entities.Notification", b =>
+                {
+                    b.HasOne("SleekChat.Core.Entities.Message", "Message")
+                        .WithMany("Notifications")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SleekChat.Core.Entities.User", "Recipient")
+                        .WithMany("ReceivedNotifications")
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

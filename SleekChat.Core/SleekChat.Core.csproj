@@ -8,4 +8,7 @@
     <Folder Include="Entities\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="SleekChat.Core.csproj" />
+  </ItemGroup>
 </Project>

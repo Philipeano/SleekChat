@@ -20,12 +20,12 @@ namespace SleekChat.Core.Entities
 
         public DateTime DateCreated { get; set; }
 
-        /* RELATIONSHIPS -------------------------------------------------------------
+        /* RELATIONSHIPS ------------------------------------------------------------
          * A Group must have one Creator (User) while a User can create many Groups
          * Membership is a join table for User and Group many-to-many relationships        
          * A Message must have one target Group while a Group can have many Messages 
-        ------------------------------------------------------------------------------*/
-        [Required]
+        ---------------------------------------------------------------------------*/
+        //[Required]
         public User Creator { get; set; }
 
         public List<Membership> Memberships { get; set; }

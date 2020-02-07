@@ -34,7 +34,7 @@ namespace SleekChat
                 });
 
             services
-                .AddDbContextPool<SleekChatDbContext>(options => options
+                .AddDbContextPool<SleekChatContext>(options => options
                 .UseSqlServer(Configuration.GetConnectionString("SleekChatConnStr")));
 
             services.AddScoped<IUserData, SqlUserData>();

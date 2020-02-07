@@ -11,10 +11,10 @@ namespace SleekChat.Data.SqlServerDataService
 {
     public class SqlGroupData : IGroupData
     {
-        private readonly SleekChatDbContext dbcontext;
+        private readonly SleekChatContext dbcontext;
         private readonly IMembershipData membershipData;
 
-        public SqlGroupData(SleekChatDbContext dbcontext, IMembershipData membershipData)
+        public SqlGroupData(SleekChatContext dbcontext, IMembershipData membershipData)
         {
             this.dbcontext = dbcontext;
             this.membershipData = membershipData;

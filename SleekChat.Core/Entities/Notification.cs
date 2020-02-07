@@ -18,14 +18,14 @@ namespace SleekChat.Core.Entities
 
         public DateTime DateCreated { get; set; }
 
-        /* RELATIONSHIPS ----------------------------------------------------------------------------
+        /* RELATIONSHIPS ---------------------------------------------------------------------------------
          * A Message can generate many Notifications while a Notification must be attached to one Message 
          * A Notification must have one Recipient (User) while a User can have many Notifications
-        ---------------------------------------------------------------------------------------------*/
-        [Required]
+        ------------------------------------------------------------------------------------------------*/
+        //[Required]
         public User Recipient { get; set; }
 
-        [Required]
+        //[Required]
         public Message Message { get; set; }
 
 

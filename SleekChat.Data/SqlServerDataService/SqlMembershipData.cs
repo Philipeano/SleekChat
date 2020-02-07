@@ -9,9 +9,9 @@ namespace SleekChat.Data.SqlServerDataService
 {
     public class SqlMembershipData : IMembershipData
     {
-        private readonly SleekChatDbContext dbcontext;
+        private readonly SleekChatContext dbcontext;
 
-        public SqlMembershipData(SleekChatDbContext dbcontext)
+        public SqlMembershipData(SleekChatContext dbcontext)
         {
             this.dbcontext = dbcontext;
         }
@@ -48,7 +48,7 @@ namespace SleekChat.Data.SqlServerDataService
 
         public void RemoveGroupMember(Guid groupId, Guid userId)
         {
-            Membership membership = dbcontext.Memberships.First(m => m.GroupId == groupId && m.MemberId == userId);
+            Membership membership = dbcontext.Memberships.FirstOrDefault(m => m.GroupId == groupId && m.MemberId == userId);
             if (membership != null)
             {
                 dbcontext.Memberships.Remove(membership);
@@ -58,7 +58,7 @@ namespace SleekChat.Data.SqlServerDataService
 
         public bool IsGroupMember(Guid groupId, Guid userId)
         {
-            return dbcontext.Memberships.First(m => m.GroupId == groupId && m.MemberId == userId) != null;
+            return dbcontext.Memberships.FirstOrDefault(m => m.GroupId == groupId && m.MemberId == userId) != null;
         }
 
         public int Commit()

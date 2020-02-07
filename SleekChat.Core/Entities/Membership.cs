@@ -17,13 +17,13 @@ namespace SleekChat.Core.Entities
 
         public DateTime DateCreated { get; set; }
 
-        /* RELATIONSHIPS -----------------------------------------------------------
+        /* RELATIONSHIPS ------------------------------------------------------------
          * Membership is a join table for User and Group many-to-many relationships
         ---------------------------------------------------------------------------*/
-        [Required]
+        //[Required]
         public Group Group { get; set; }
 
-        [Required]
+        //[Required]
         public User Member { get; set; }
 
 

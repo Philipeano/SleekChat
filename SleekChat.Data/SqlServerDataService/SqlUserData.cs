@@ -11,9 +11,9 @@ namespace SleekChat.Data.SqlServerDataService
 {
     public class SqlUserData : IUserData
     {
-        private readonly SleekChatDbContext dbcontext;
+        private readonly SleekChatContext dbcontext;
 
-        public SqlUserData(SleekChatDbContext dbcontext)
+        public SqlUserData(SleekChatContext dbcontext)
         {
             this.dbcontext = dbcontext;
         }
