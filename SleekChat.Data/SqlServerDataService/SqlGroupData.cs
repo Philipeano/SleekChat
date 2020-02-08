@@ -41,12 +41,12 @@ namespace SleekChat.Data.SqlServerDataService
 
         public IEnumerable<Group> GetAllGroups()
         {
-            return dbcontext.Groups;
+            return dbcontext.Groups.Where(g => g.IsActive == true);
         }
 
         public Group GetGroupById(Guid groupId)
         {
-            return dbcontext.Groups.SingleOrDefault(g => g.Id == groupId);
+            return dbcontext.Groups.SingleOrDefault(g => g.Id == groupId && g.IsActive == true);
         }
 
         public Group UpdateGroup(Guid id, string title, string purpose, bool isActive, out Group updatedGroup)
@@ -64,10 +64,13 @@ namespace SleekChat.Data.SqlServerDataService
 
         public void DeleteGroup(Guid groupId)
         {
-            Group group = GetGroupById(groupId);
-            if (group != null)
+            Group deactivatedGroup = GetGroupById(groupId);
+            if (deactivatedGroup != null)
             {
-                dbcontext.Groups.Remove(group);
+                deactivatedGroup.IsActive = false;
+                EntityEntry<Group> entry = dbcontext.Groups.Attach(deactivatedGroup);
+                entry.State = EntityState.Modified;
+                //dbcontext.Groups.Remove(deactivatedGroup);
                 Commit();
             }
         }

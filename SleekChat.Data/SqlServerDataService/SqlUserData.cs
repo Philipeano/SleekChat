@@ -36,12 +36,12 @@ namespace SleekChat.Data.SqlServerDataService
 
         public IEnumerable<User> GetAllUsers()
         {
-            return dbcontext.Users;
+            return dbcontext.Users.Where(u => u.IsActive == true);
         }
 
         public User GetUserById(Guid userId)
         {
-            return dbcontext.Users.SingleOrDefault(u => u.Id == userId);
+            return dbcontext.Users.SingleOrDefault(u => u.Id == userId && u.IsActive == true);
         }
 
         public bool UsernameAlreadyTaken(string username, out User matchingUser)
@@ -71,10 +71,13 @@ namespace SleekChat.Data.SqlServerDataService
 
         public void DeleteUser(Guid userId)
         {
-            User user = GetUserById(userId);
-            if (user != null)
+            User deactivatedUser = GetUserById(userId);
+            if (deactivatedUser != null)
             {
-                dbcontext.Users.Remove(user);
+                deactivatedUser.IsActive = false;
+                EntityEntry<User> entry = dbcontext.Users.Attach(deactivatedUser);
+                entry.State = EntityState.Modified;
+                //dbcontext.Users.Remove(deactivatedUser);
                 Commit();
             }
         }
