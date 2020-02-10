@@ -27,11 +27,14 @@ namespace SleekChat.Core.Entities
         public User Member { get; set; }
 
 
-        public void Deconstruct(out Guid id, out Guid groupId, out Guid memberId, out string role, out DateTime joined)
+        public void Deconstruct(out Guid id, out Guid groupId, out Group group, out Guid memberId, out User member,
+                                out string role, out DateTime joined)
         {
             id = Id;
             groupId = GroupId;
+            group = Group;
             memberId = MemberId;
+            member = Member;
             role = MemberRole;
             joined = DateCreated;
         }

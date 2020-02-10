@@ -37,8 +37,9 @@ namespace SleekChat.Data.Helpers
 
         private dynamic Simplify(string type, dynamic item)
         {
-            dynamic result = null;
-            switch (type) 
+            if (item is null) return null;
+            dynamic result; User objUser; Group objGroup; Message objMessage;
+            switch (type)
             {
                 case "User":
                     result = new SimplifiedUser();
@@ -46,19 +47,29 @@ namespace SleekChat.Data.Helpers
                     break;
                 case "Group":
                     result = new SimplifiedGroup();
-                    (result.Id, result.Title, result.Purpose, result.CreatorId, result.Created) = (Group)item;
+                    (result.Id, result.Title, result.Purpose, result.CreatorId, objUser, result.Created) = (Group)item;
+                    result.Creator = Simplify("User", objUser);
                     break;
                 case "Membership":
                     result = new SimplifiedMembership();
-                    (result.Id, result.GroupId, result.MemberId, result.MemberRole, result.Joined) = (Membership)item;
+                    (result.Id, result.GroupId, objGroup, result.MemberId, objUser, result.MemberRole, result.Joined) = (Membership)item;
+                    result.Group = Simplify("Group", objGroup);
+                    result.Member = Simplify("User", objUser);
                     break;
                 case "Message":
                     result = new SimplifiedMessage();
-                    (result.Id, result.Content, result.Status, result.Priority, result.GroupId, result.SenderId, result.Sent) = (Message)item;
+                    (result.Id, result.Content, result.Status, result.Priority, result.GroupId, objGroup, result.SenderId, objUser, result.Sent) = (Message)item;
+                    result.Group = Simplify("Group", objGroup);
+                    result.Sender = Simplify("User", objUser);
                     break;
                 case "Notification":
                     result = new SimplifiedNotification();
-                    (result.Id, result.RecipientId, result.MessageId, result.Status, result.Received) = (Notification)item;
+                    (result.Id, result.RecipientId, objUser, result.MessageId, objMessage, result.Status, result.Received) = (Notification)item;
+                    result.Message = Simplify("Message", objMessage);
+                    result.Recipient = Simplify("User", objUser);
+                    break;
+                default:
+                    result = null;
                     break;
             }
             return result;

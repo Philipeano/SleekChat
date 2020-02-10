@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SleekChat.Core.Entities
 {
@@ -14,8 +15,10 @@ namespace SleekChat.Core.Entities
 
         public string Email { get; set; }
 
+        [JsonIgnore]
         public string Password { get; set; }
 
+        [JsonIgnore]
         public bool IsActive { get; set; }
 
         public DateTime DateCreated { get; set; }
@@ -26,17 +29,21 @@ namespace SleekChat.Core.Entities
          * A Message must have one Sender (User) while a User can send many Messages
          * A Notification must have one Recipient (User) while a User can have many Notifications
         ---------------------------------------------------------------------------------------*/
+
+        [JsonIgnore]
         [InverseProperty("Creator")]
         public List<Group> CreatedGroups { get; set; }
 
+        [JsonIgnore]
         public List<Membership> Memberships { get; set; }
 
+        [JsonIgnore]
         [InverseProperty("Sender")]
         public List<Message> SentMessages { get; set; }
 
+        [JsonIgnore]
         [InverseProperty("Recipient")]
         public List<Notification> ReceivedNotifications { get; set; }
-
 
         public override string ToString() => JsonSerializer.Serialize(this, null);
 

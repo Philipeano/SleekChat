@@ -36,23 +36,27 @@ namespace SleekChat.Data.SqlServerDataService
 
         public IEnumerable<User> GetAllUsers()
         {
-            return dbcontext.Users.Where(u => u.IsActive == true);
+            return dbcontext.Users
+                .Where(u => u.IsActive == true);
         }
 
         public User GetUserById(Guid userId)
         {
-            return dbcontext.Users.SingleOrDefault(u => u.Id == userId && u.IsActive == true);
+            return dbcontext.Users
+                .SingleOrDefault(u => u.Id == userId && u.IsActive == true);
         }
 
         public bool UsernameAlreadyTaken(string username, out User matchingUser)
         {
-            matchingUser = dbcontext.Users.SingleOrDefault(u => u.Username == username);
+            matchingUser = dbcontext.Users
+                .SingleOrDefault(u => u.Username == username);
             return matchingUser != null;
         }
 
         public bool EmailAlreadyTaken(string email, out User matchingUser)
         {
-            matchingUser = dbcontext.Users.SingleOrDefault(u => u.Email == email);
+            matchingUser = dbcontext.Users
+                .SingleOrDefault(u => u.Email == email);
             return matchingUser != null;
         }
 
@@ -63,8 +67,8 @@ namespace SleekChat.Data.SqlServerDataService
             updatedUser.Email = email;
             updatedUser.Password = DataHelper.Encrypt(password);
 
-            EntityEntry<User> userEntity = dbcontext.Users.Attach(updatedUser);
-            userEntity.State = EntityState.Modified;
+            EntityEntry<User> entry = dbcontext.Users.Attach(updatedUser);
+            entry.State = EntityState.Modified;
             Commit();
             return updatedUser;
         }

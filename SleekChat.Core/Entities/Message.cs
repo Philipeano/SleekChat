@@ -36,14 +36,18 @@ namespace SleekChat.Core.Entities
         public List<Notification> Notifications { get; set; }
 
 
-        public void Deconstruct(out Guid id, out string content, out string status, out string priority, out Guid groupId, out Guid? senderId, out DateTime sent)
+        public void Deconstruct(out Guid id, out string content, out string status, out string priority,
+                                out Guid groupId, out Group group, out Guid? senderId, out User sender,
+                                out DateTime sent)
         {
             id = Id;
             content = Content;
             status = Status.ToString();
             priority = Priority.ToString();
             groupId = GroupId;
+            group = Group;
             senderId = SenderId;
+            sender = Sender;
             sent = DateCreated;
         }
     }

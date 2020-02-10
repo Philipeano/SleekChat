@@ -34,19 +34,23 @@ namespace SleekChat.Data.SqlServerDataService
             dbcontext.Groups.Add(newGroup);
 
             // Add creator as group member
-            _ = membershipData.AddGroupMember(newGroup.Id, creatorId, "Creator");
+            _membershipData.AddGroupMember(newGroup.Id, creatorId, "Creator");
             Commit();
             return newGroup;
         }
 
         public IEnumerable<Group> GetAllGroups()
         {
-            return dbcontext.Groups.Where(g => g.IsActive == true);
+            return dbcontext.Groups
+                .Include(g => g.Creator)
+                .Where(g => g.IsActive == true);
         }
 
         public Group GetGroupById(Guid groupId)
         {
-            return dbcontext.Groups.SingleOrDefault(g => g.Id == groupId && g.IsActive == true);
+            return dbcontext.Groups
+                .Include(g => g.Creator)
+                .SingleOrDefault(g => g.Id == groupId && g.IsActive == true);
         }
 
         public Group UpdateGroup(Guid id, string title, string purpose, bool isActive, out Group updatedGroup)
@@ -56,8 +60,8 @@ namespace SleekChat.Data.SqlServerDataService
             updatedGroup.Purpose = purpose;
             updatedGroup.IsActive = isActive;
 
-            EntityEntry<Group> groupEntity = dbcontext.Groups.Attach(updatedGroup);
-            groupEntity.State = EntityState.Modified;
+            EntityEntry<Group> entry = dbcontext.Groups.Attach(updatedGroup);
+            entry.State = EntityState.Modified;
             Commit();
             return updatedGroup;
         }
@@ -70,19 +74,20 @@ namespace SleekChat.Data.SqlServerDataService
                 deactivatedGroup.IsActive = false;
                 EntityEntry<Group> entry = dbcontext.Groups.Attach(deactivatedGroup);
                 entry.State = EntityState.Modified;
-                //dbcontext.Groups.Remove(deactivatedGroup);
                 Commit();
             }
         }
 
         public bool IsGroupCreator(Guid groupId, Guid userId)
         {
-            return (dbcontext.Groups.SingleOrDefault(g => g.Id == groupId && g.CreatorId == userId) != null);
+            return (dbcontext.Groups
+                .SingleOrDefault(g => g.Id == groupId && g.CreatorId == userId) != null);
         }
 
         public bool TitleAlreadyTaken(string title, out Group matchingGroup)
         {
-            matchingGroup = dbcontext.Groups.SingleOrDefault(g => g.Title == title);
+            matchingGroup = dbcontext.Groups
+                .SingleOrDefault(g => g.Title == title);
             return matchingGroup != null;
         }
 

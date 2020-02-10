@@ -36,7 +36,6 @@ namespace SleekChat.Data.SqlServerDataService
             };
             dbcontext.Messages.Add(newMessage);
 
-            // Create a notification for each group member except the message sender
             NotifyGroupMembers(groupId, newMessage, out _);
             Commit();
             return newMessage;
@@ -44,7 +43,9 @@ namespace SleekChat.Data.SqlServerDataService
 
         public void NotifyGroupMembers(Guid groupId, Message message, out int recipientCount)
         {
-            IEnumerable<Membership> groupMemberships = membershipData.GetAllMemberships().Where(m => m.GroupId == groupId && m.MemberId != message.SenderId);
+            // Create a notification for each group member except the message sender
+            IEnumerable<Membership> groupMemberships = membershipData.GetAllMemberships()
+                .Where(m => m.GroupId == groupId && m.MemberId != message.SenderId);
             foreach (Membership membership in groupMemberships)
             {
                 notificationData.CreateNewNotification(membership.MemberId, message.Id, NotificationStatus.Unread, DateTime.Now);
@@ -54,37 +55,55 @@ namespace SleekChat.Data.SqlServerDataService
 
         public IEnumerable<Message> GetAllMessages()
         {
-            return dbcontext.Messages;
+            return dbcontext.Messages
+                .Include(m => m.Group).Where(m => m.Group.IsActive == true)
+                .Include(m => m.Sender).Where(m => m.Sender.IsActive == true);
         }
 
         public IEnumerable<Message> GetAllMessagesFromAUser(Guid senderId)
         {
-            return dbcontext.Messages.Where(m => m.SenderId == senderId);
+            return dbcontext.Messages
+                .Include(m => m.Group).Where(m => m.Group.IsActive == true)
+                .Include(m => m.Sender).Where(m => m.Sender.IsActive == true)
+                .Where(m => m.SenderId == senderId);
         }
 
         public IEnumerable<Message> GetGroupMessages(Guid groupId)
         {
-            return dbcontext.Messages.Where(m => m.GroupId == groupId);
+            return dbcontext.Messages
+                .Include(m => m.Group).Where(m => m.Group.IsActive == true)
+                .Include(m => m.Sender).Where(m => m.Sender.IsActive == true)
+                .Where(m => m.GroupId == groupId);
         }
 
         public Message GetGroupMessageById(Guid groupId, Guid messageId)
         {
-            return dbcontext.Messages.SingleOrDefault(m => m.GroupId == groupId && m.Id == messageId);
+            return dbcontext.Messages
+                .Include(m => m.Group).Where(m => m.Group.IsActive == true)
+                .Include(m => m.Sender).Where(m => m.Sender.IsActive == true)
+                .SingleOrDefault(m => m.GroupId == groupId && m.Id == messageId);
         }
 
         public IEnumerable<Message> GetGroupMessagesFromAUser(Guid groupId, Guid senderId)
         {
-            return dbcontext.Messages.Where(m => m.GroupId == groupId && m.SenderId == senderId);
+            return dbcontext.Messages
+                .Include(m => m.Group).Where(m => m.Group.IsActive == true)
+                .Include(m => m.Sender).Where(m => m.Sender.IsActive == true)
+                .Where(m => m.GroupId == groupId && m.SenderId == senderId);
         }
 
         public Message GetMessageById(Guid messageId)
         {
-            return dbcontext.Messages.SingleOrDefault(m => m.Id == messageId);
+            return dbcontext.Messages
+                .Include(m => m.Group).Where(m => m.Group.IsActive == true)
+                .Include(m => m.Sender).Where(m => m.Sender.IsActive == true)
+                .SingleOrDefault(m => m.Id == messageId);
         }
 
         public bool IsMessageSender(Guid messageId, Guid userId)
         {
-            return (dbcontext.Messages.SingleOrDefault(m => m.Id == messageId && m.SenderId == userId) != null);
+            return dbcontext.Messages
+                .SingleOrDefault(m => m.Id == messageId && m.SenderId == userId) != null;
         }
 
         public Message UpdateMessage(Guid id, string content, PriorityLevel priority, out Message updatedMessage)
@@ -93,8 +112,8 @@ namespace SleekChat.Data.SqlServerDataService
             updatedMessage.Content = content;
             updatedMessage.Priority = priority;
 
-            EntityEntry<Message> messageEntity = dbcontext.Messages.Attach(updatedMessage);
-            messageEntity.State = EntityState.Modified;
+            EntityEntry<Message> entry = dbcontext.Messages.Attach(updatedMessage);
+            entry.State = EntityState.Modified;
             Commit();
             return updatedMessage;
         }

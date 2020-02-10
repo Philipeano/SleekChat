@@ -29,11 +29,14 @@ namespace SleekChat.Core.Entities
         public Message Message { get; set; }
 
 
-        public void Deconstruct(out Guid id, out Guid recipientId, out Guid messageId, out string status, out DateTime received)
+        public void Deconstruct(out Guid id, out Guid recipientId, out User recipient, out Guid messageId,
+                                out Message message, out string status, out DateTime received)
         {
             id = Id;
             recipientId = RecipientId;
+            recipient = Recipient;
             messageId = MessageId;
+            message = Message;
             status = Status.ToString();
             received = DateCreated;
         }

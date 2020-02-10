@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using SleekChat.Core.Entities;
 
 namespace SleekChat.Data.Helpers
@@ -64,15 +65,21 @@ namespace SleekChat.Data.Helpers
         public Guid Id { get; set; }
         public string Title { get; set; }
         public string Purpose { get; set; }
+        [JsonIgnore]
         public Guid CreatorId { get; set; }
+        public SimplifiedUser Creator { get; set; }
         public DateTime Created { get; set; }
     }
 
     public class SimplifiedMembership
     {
         public Guid Id { get; set; }
+        [JsonIgnore]
         public Guid GroupId { get; set; }
+        public SimplifiedGroup Group { get; set; }
+        [JsonIgnore]
         public Guid MemberId { get; set; }
+        public SimplifiedUser Member { get; set; }
         public string MemberRole { get; set; }
         public DateTime Joined { get; set; }
     }
@@ -83,18 +90,25 @@ namespace SleekChat.Data.Helpers
         public string Content { get; set; }
         public string Status { get; set; }
         public string Priority { get; set; }
+        [JsonIgnore]
         public Guid GroupId { get; set; }
+        public SimplifiedGroup Group { get; set; }
+        [JsonIgnore]
         public Guid SenderId { get; set; }
+        public SimplifiedUser Sender { get; set; }
         public DateTime Sent { get; set; }
     }
 
     public class SimplifiedNotification
     {
         public Guid Id { get; set; }
+        [JsonIgnore]
         public Guid RecipientId { get; set; }
+        public SimplifiedUser Recipient { get; set; }
+        [JsonIgnore]
         public Guid MessageId { get; set; }
+        public SimplifiedMessage Message { get; set; }
         public string Status { get; set; }
         public DateTime Received { get; set; }
     }
-
 }
