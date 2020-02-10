@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace SleekChat.Core.Entities
 {
     public class Notification
     {
+        [Column("NotificationId")]
         public Guid Id { get; set; }
 
         public Guid RecipientId { get; set; }
@@ -13,11 +18,25 @@ namespace SleekChat.Core.Entities
 
         public DateTime DateCreated { get; set; }
 
-        public void Deconstruct(out Guid id, out Guid recipientId, out Guid messageId, out string status, out DateTime received)
+        /* RELATIONSHIPS ---------------------------------------------------------------------------------
+         * A Message can generate many Notifications while a Notification must be attached to one Message 
+         * A Notification must have one Recipient (User) while a User can have many Notifications
+        ------------------------------------------------------------------------------------------------*/
+        //[Required]
+        public User Recipient { get; set; }
+
+        //[Required]
+        public Message Message { get; set; }
+
+
+        public void Deconstruct(out Guid id, out Guid recipientId, out User recipient, out Guid messageId,
+                                out Message message, out string status, out DateTime received)
         {
             id = Id;
             recipientId = RecipientId;
+            recipient = Recipient;
             messageId = MessageId;
+            message = Message;
             status = Status.ToString();
             received = DateCreated;
         }

@@ -11,9 +11,9 @@ namespace SleekChat.Data.SqlServerDataService
 {
     public class SqlNotificationData : INotificationData
     {
-        private readonly SleekChatDbContext dbcontext;
+        private readonly SleekChatContext dbcontext;
 
-        public SqlNotificationData(SleekChatDbContext dbcontext)
+        public SqlNotificationData(SleekChatContext dbcontext)
         {
             this.dbcontext = dbcontext;
         }
@@ -29,23 +29,30 @@ namespace SleekChat.Data.SqlServerDataService
                 DateCreated = DateTime.Now
             };
             dbcontext.Notifications.Add(newNotification);
-            Commit();
             return newNotification;
         }
 
         public IEnumerable<Notification> GetAllNotifications()
         {
-            return dbcontext.Notifications;
+            return dbcontext.Notifications
+                .Include(n => n.Recipient).Where(n => n.Recipient.IsActive == true)
+                .Include(n => n.Message);
         }
 
         public IEnumerable<Notification> GetNotificationsForAUser(Guid userId)
         {
-            return dbcontext.Notifications.Where(n => n.RecipientId == userId);
+            return dbcontext.Notifications
+                .Include(n => n.Recipient).Where(n => n.Recipient.IsActive == true)
+                .Include(n => n.Message)
+                .Where(n => n.RecipientId == userId);
         }
 
         public Notification GetNotificationById(Guid notificationId)
         {
-            return dbcontext.Notifications.SingleOrDefault(n => n.Id == notificationId);
+            return dbcontext.Notifications
+                .Include(n => n.Recipient).Where(n => n.Recipient.IsActive == true)
+                .Include(n => n.Message)
+                .SingleOrDefault(n => n.Id == notificationId);
         }
 
         public Notification UpdateNotification(Guid id, NotificationStatus status, out Notification updatedNotification)
@@ -53,8 +60,8 @@ namespace SleekChat.Data.SqlServerDataService
             updatedNotification = GetNotificationById(id);
             updatedNotification.Status = status;
 
-            EntityEntry<Notification> notificationEntity = dbcontext.Notifications.Attach(updatedNotification);
-            notificationEntity.State = EntityState.Modified;
+            EntityEntry<Notification> entry = dbcontext.Notifications.Attach(updatedNotification);
+            entry.State = EntityState.Modified;
             Commit();
             return updatedNotification;
         }
@@ -71,7 +78,8 @@ namespace SleekChat.Data.SqlServerDataService
 
         public bool IsNotificationRecipient(Guid notificationId, Guid userId)
         {
-            return (dbcontext.Notifications.SingleOrDefault(n => n.Id == notificationId && n.RecipientId == userId) != null);
+            return dbcontext.Notifications
+                .SingleOrDefault(n => n.Id == notificationId && n.RecipientId == userId) != null;
         }
 
         public int Commit()
