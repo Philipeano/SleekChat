@@ -19,12 +19,14 @@ namespace SleekChat.Data.InMemoryDataService
 
         public User CreateNewUser(string username, string email, string password, bool isActive = true)
         {
+            string hashedPassword = SecurityHelper.CreateHash(password);
+
             User newUser = new User
             {
                 Id = DataHelper.GetGuid(),
                 Username = username,
                 Email = email,
-                Password = DataHelper.Encrypt(password),
+                Password = hashedPassword,
                 IsActive = isActive,
                 DateCreated = DateTime.Now
             };
@@ -56,12 +58,14 @@ namespace SleekChat.Data.InMemoryDataService
 
         public User UpdateUser(Guid id, string username, string email, string password, out User updatedUser)
         {
+            string hashedPassword = SecurityHelper.CreateHash(password);
+
             IEnumerable<User> query = users.Where(u => u.Id == id)
                        .Select(u =>
                        {
                            u.Username = username;
                            u.Email = email;
-                           u.Password = DataHelper.Encrypt(password);
+                           u.Password = hashedPassword;
                            return u;
                        });
             updatedUser = query.First();

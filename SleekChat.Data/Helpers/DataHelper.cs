@@ -12,42 +12,24 @@ namespace SleekChat.Data.Helpers
             return Guid.NewGuid();
         }
 
-        public static string Encrypt(string rawText)
-        {
-            string encryptedText = rawText;
-            // Perform encryption here
-            return encryptedText;
-        }
-
-        public static string Decrypt(string encryptedText)
-        {
-            string decryptedText = encryptedText;
-            // Perform decryption here
-            return decryptedText;
-        }
         public static PriorityLevel GetPriority(string priority)
         {
-            switch (priority)
+            return priority switch
             {
-                case "Critical":
-                    return PriorityLevel.Critical;
-                case "Urgent":
-                    return PriorityLevel.Urgent;
-                default:
-                    return PriorityLevel.Normal;
-            }
+                "Critical" => PriorityLevel.Critical,
+                "Urgent" => PriorityLevel.Urgent,
+                _ => PriorityLevel.Normal,
+            };
         }
+
         public static NotificationStatus GetStatus(string status)
         {
-            switch (status)
+            return status switch
             {
-                case "Read":
-                    return NotificationStatus.Read;
-                case "Archived":
-                    return NotificationStatus.Archived;
-                default:
-                    return NotificationStatus.Unread;
-            }
+                "Read" => NotificationStatus.Read,
+                "Archived" => NotificationStatus.Archived,
+                _ => NotificationStatus.Unread,
+            };
         }        
     }
 
