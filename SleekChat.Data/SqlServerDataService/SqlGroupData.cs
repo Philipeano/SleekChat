@@ -34,7 +34,7 @@ namespace SleekChat.Data.SqlServerDataService
             dbcontext.Groups.Add(newGroup);
 
             // Add creator as group member
-            _membershipData.AddGroupMember(newGroup.Id, creatorId, "Creator");
+            _ = membershipData.AddGroupMember(newGroup.Id, creatorId, "Creator");
             Commit();
             return newGroup;
         }
