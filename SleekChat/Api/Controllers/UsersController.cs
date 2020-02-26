@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using SleekChat.Core.Entities;
 using SleekChat.Data.Contracts;
 using SleekChat.Data.Helpers;
 
 namespace SleekChat.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -15,10 +18,12 @@ namespace SleekChat.Api.Controllers
         private readonly ValidationHelper validator;
         private readonly FormatHelper formatter;
         private KeyValuePair<bool, string> validationResult;
+        private readonly IOptions<AppSettings> config;
 
-        public UsersController(IUserData userData)
+        public UsersController(IUserData userData, IOptions<AppSettings> config)
         {
             this.userData = userData;
+            this.config = config;
             validator = new ValidationHelper();
             formatter = new FormatHelper();
         }
@@ -49,9 +54,10 @@ namespace SleekChat.Api.Controllers
             return Ok(formatter.Render(user, "User", Operation.Retrieved));
         }
 
-        // POST: api/users
-        [HttpPost]
-        public ActionResult Post([FromBody] RequestBody reqBody)
+        // POST: api/users/register
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public ActionResult Register([FromBody] RequestBody reqBody)
         {
             (string username, string email, string password, string cPassword, _) = reqBody;
 
@@ -77,9 +83,31 @@ namespace SleekChat.Api.Controllers
             if (userData.EmailAlreadyTaken(email, out _))
                 return Conflict(formatter.Render(validator.Result($"The email address '{email}' is already in use.")));
 
-            User newUser = userData.CreateNewUser(username, email, cPassword, true);
+            User newUser = userData.CreateNewUser(username, email, password, true);
             return Created("", formatter.Render(newUser, "User", Operation.Registered));
         }
+
+
+        // POST: api/users/authenticate
+        [AllowAnonymous]
+        [HttpPost("authenticate")]
+        public ActionResult Authenticate([FromBody] AuthRequestBody reqBody)
+        {
+            validationResult = validator.IsBlank("username", reqBody.Username);
+            if (validationResult.Key == false)
+                return BadRequest(formatter.Render(validationResult));
+
+            validationResult = validator.IsBlank("password", reqBody.Password);
+            if (validationResult.Key == false)
+                return BadRequest(formatter.Render(validationResult));
+
+            AuthenticatedUser user = userData.Authenticate(reqBody, config);
+            if (user == null)
+                return BadRequest(formatter.Render(validator.Result("Username or password is invalid.")));
+
+            return Ok(formatter.Render(user, "AuthenticatedUser", Operation.Authenticated));
+        }
+
 
         // PUT: api/users/id
         [HttpPut("{id}")]

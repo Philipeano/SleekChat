@@ -17,7 +17,8 @@ namespace SleekChat.Data.Helpers
         Updated,
         Deleted,
         Registered,
-        Posted
+        Posted,
+        Authenticated
     }
 
 
@@ -28,6 +29,13 @@ namespace SleekChat.Data.Helpers
         public dynamic Data { get; set; }
 
         public override string ToString() => JsonSerializer.Serialize(this, null);
+    }
+
+
+    public class AuthRequestBody
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 
 

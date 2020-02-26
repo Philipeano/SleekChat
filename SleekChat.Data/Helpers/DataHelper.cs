@@ -33,13 +33,26 @@ namespace SleekChat.Data.Helpers
         }        
     }
 
-
     public class SimplifiedUser
     {
         public Guid Id { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
         public DateTime Registered { get; set; }
+    }
+
+    public class AuthenticatedUser: SimplifiedUser
+    {
+        public string Token { get; set; }
+
+        public void Deconstruct(out Guid id, out string username, out string email, out DateTime registered, out string token)
+        {
+            id = Id;
+            username = Username;
+            email = Email;
+            registered = Registered;
+            token = Token;
+        }
     }
 
     public class SimplifiedGroup

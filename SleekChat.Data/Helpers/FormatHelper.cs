@@ -11,7 +11,7 @@ namespace SleekChat.Data.Helpers
             ResponseBody response = new ResponseBody
             {
                 Status = "normal",
-                Message = $"{outputType} {operation.ToString().ToLower()} successfully!",
+                Message = $"{(outputType == "AuthenticatedUser" ? "User" : outputType)} {operation.ToString().ToLower()} successfully!",
                 Data = (output == null) ? null : Simplify(outputType, output)
             };
             return response;
@@ -44,6 +44,10 @@ namespace SleekChat.Data.Helpers
                 case "User":
                     result = new SimplifiedUser();
                     (result.Id, result.Username, result.Email, result.Registered) = (User)item;
+                    break;
+                case "AuthenticatedUser":
+                    result = new AuthenticatedUser();
+                    (result.Id, result.Username, result.Email, result.Registered, result.Token) = (AuthenticatedUser)item;
                     break;
                 case "Group":
                     result = new SimplifiedGroup();

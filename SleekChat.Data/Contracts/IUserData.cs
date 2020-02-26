@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Options;
 using SleekChat.Core.Entities;
+using SleekChat.Data.Helpers;
 
 namespace SleekChat.Data.Contracts
 {
     public interface IUserData
     {
         public User CreateNewUser(string username, string email, string password, bool isActive);
+
+        public AuthenticatedUser Authenticate(AuthRequestBody authInfo, IOptions<AppSettings> config);
 
         public IEnumerable<User> GetAllUsers();
 
@@ -20,5 +24,4 @@ namespace SleekChat.Data.Contracts
 
         public bool EmailAlreadyTaken(string email, out User matchingUser);
     }
-
 }

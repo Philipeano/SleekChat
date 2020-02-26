@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SleekChat.Core.Entities;
@@ -9,6 +10,7 @@ using SleekChat.Data.Helpers;
 
 namespace SleekChat.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     public class MembershipsController : ControllerBase
     {
