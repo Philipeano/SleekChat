@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,9 +24,11 @@ namespace SleekChat
             Configuration = configuration;
         }
 
-        public void ConfigureServices(IServiceCollection services, IWebHostEnvironment env)
+        //public void ConfigureServices(IServiceCollection services, IWebHostEnvironment env)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddHttpContextAccessor();
 
             services
                 .AddDbContextPool<SleekChatContext>(options => options
@@ -42,7 +45,7 @@ namespace SleekChat
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x =>
             {
-                x.RequireHttpsMetadata = env.IsProduction(); // True for production, otherwise False
+                //x.RequireHttpsMetadata = env.IsProduction(); // True for production, otherwise False
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -58,6 +61,7 @@ namespace SleekChat
             services.AddScoped<IMembershipData, SqlMembershipData>();
             services.AddScoped<IMessageData, SqlMessageData>();
             services.AddScoped<INotificationData, SqlNotificationData>();
+            services.AddScoped<ICurrentUser, CurrentUser>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

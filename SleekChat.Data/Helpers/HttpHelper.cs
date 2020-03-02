@@ -1,11 +1,21 @@
 ﻿using System.Text.Json;
 using System.Threading;
-using SleekChat.Core.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace SleekChat.Data.Helpers
 {
-    public abstract class HttpHelper
+    public class HttpHelper
     {
+
+        public void Forbid(HttpResponse responseObj, string responseJson)
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+            responseObj.StatusCode = 403;
+            responseObj.ContentType = "application/json";
+            _ = responseObj.WriteAsync(responseJson, System.Text.Encoding.Default, token);
+            source.Dispose();
+        }
 
     }
 
