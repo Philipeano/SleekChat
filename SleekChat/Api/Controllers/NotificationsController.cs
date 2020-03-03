@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SleekChat.Core.Entities;
 using SleekChat.Data.Contracts;
@@ -14,19 +12,24 @@ namespace SleekChat.Api.Controllers
     [ApiController]
     public class NotificationsController : ControllerBase
     {
-        private readonly IUserData userData;
+        private readonly ICurrentUser currentUser;
         private readonly INotificationData notificationData;
+        private readonly IUserData userData;
         private readonly ValidationHelper validator;
         private readonly FormatHelper formatter;
+        private readonly HttpHelper httpHelper;
         private KeyValuePair<bool, string> validationResult;
 
-        public NotificationsController(IUserData userData, INotificationData notificationData)
+        public NotificationsController(IUserData userData, INotificationData notificationData, ICurrentUser currentUser)
         {
-            this.userData = userData;
+            this.currentUser = currentUser;
             this.notificationData = notificationData;
+            this.userData = userData;
             validator = new ValidationHelper();
             formatter = new FormatHelper();
+            httpHelper = new HttpHelper();
         }
+
 
         // GET: api/notifications?recipientId
         [HttpGet("api/notifications")]
@@ -53,6 +56,7 @@ namespace SleekChat.Api.Controllers
                 : (ActionResult)Ok(formatter.Render(notificationData.GetNotificationsForAUser(reqRecipientId), "Notifications", Operation.Retrieved));
         }
 
+
         // GET: api/notifications/id
         [HttpGet("api/notifications/{id}")]
         public ActionResult GetById([FromRoute] string id)
@@ -74,25 +78,11 @@ namespace SleekChat.Api.Controllers
                 : (ActionResult)Ok(formatter.Render(notification, "Notification", Operation.Retrieved));
         }
 
+
         // PATCH: api/notifications/id?newStatus
         [HttpPatch("api/notifications/{id}")]
-        public ActionResult Patch([FromRoute] string id, [FromQuery(Name = "newStatus")] string status, [FromHeader] string userId)
+        public ActionResult Patch([FromRoute] string id, [FromQuery(Name = "newStatus")] string status)
         {
-            // Validate current user's id
-            validationResult = validator.IsBlank("current user id", userId);
-            if (validationResult.Key == false)
-                return BadRequest(formatter.Render(validationResult));
-
-            validationResult = validator.IsValidGuid("current user id", userId);
-            if (validationResult.Key == false)
-                return BadRequest(formatter.Render(validationResult));
-
-            Guid reqUserId = Guid.Parse(userId);
-
-            User currentUser = userData.GetUserById(reqUserId);
-            if (currentUser == null)
-                return NotFound(formatter.Render(validator.Result("Your user id is invalid.")));
-
             // Validate specified notification id
             validationResult = validator.IsBlank("notification id", id);
             if (validationResult.Key == false)
@@ -107,11 +97,13 @@ namespace SleekChat.Api.Controllers
             if (notification == null)
                 return NotFound(formatter.Render(validator.Result("No notification exists with the specified id.")));
 
+            Guid userId = currentUser.GetUserId();
+
             // Check if current user is the actual recipient of this notification
-            if (!notificationData.IsNotificationRecipient(reqNotificationId, reqUserId))
+            if (!notificationData.IsNotificationRecipient(reqNotificationId, userId))
             {
                 formatter.RenderJson(validator.Result("You are not the actual recipient of this notification."), out string responseTxt);
-                Forbid(Response, responseTxt);
+                httpHelper.Forbid(Response, responseTxt);
                 return null;
             }
 
@@ -127,27 +119,11 @@ namespace SleekChat.Api.Controllers
             return Ok(formatter.Render(updatedNotification, "Notification", Operation.Updated));
         }
 
+
         // DELETE: api/notifications/id
         [HttpDelete("api/notifications/{id}")]
-        public ActionResult Delete([FromRoute] string id, [FromHeader] string userId)
+        public ActionResult Delete([FromRoute] string id)
         {
-            // Validate current user's id
-            validationResult = validator.IsBlank("current user id", userId);
-            if (validationResult.Key == false)
-                return BadRequest(formatter.Render(validationResult));
-
-            validationResult = validator.IsValidGuid("current user id", userId);
-            if (validationResult.Key == false)
-                return BadRequest(formatter.Render(validationResult));
-
-            Guid reqUserId = Guid.Parse(userId);
-
-            User currentUser = userData.GetUserById(reqUserId);
-            if (currentUser == null)
-                return NotFound(formatter.Render(validator.Result("Your user id is invalid.")));
-
-            string responseTxt;
-
             // Validate specified notification id
             validationResult = validator.IsBlank("notification id", id);
             if (validationResult.Key == false)
@@ -162,27 +138,18 @@ namespace SleekChat.Api.Controllers
             if (notification == null)
                 return NotFound(formatter.Render(validator.Result("No notification exists with the specified id.")));
 
+            Guid userId = currentUser.GetUserId();
+
             // Allow deletion only if current user is the actual recipient of the notification
-            if (notificationData.IsNotificationRecipient(reqNotificationId, reqUserId))
+            if (notificationData.IsNotificationRecipient(reqNotificationId, userId))
             {
                 notificationData.DeleteNotification(reqNotificationId);
                 return Ok(formatter.Render(null, "Notification", Operation.Deleted));
             }
 
-            formatter.RenderJson(validator.Result("You are not the actual recipient of this notification."), out responseTxt);
-            Forbid(Response, responseTxt);
+            formatter.RenderJson(validator.Result("You are not the actual recipient of this notification."), out string responseTxt);
+            httpHelper.Forbid(Response, responseTxt);
             return null;
-        }
-
-        // Custom method for 403:Forbidden response
-        private void Forbid(HttpResponse responseObj, string responseJson)
-        {
-            CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken token = source.Token;
-            responseObj.StatusCode = 403;
-            responseObj.ContentType = "application/json";
-            _ = responseObj.WriteAsync(responseJson, System.Text.Encoding.Default, token);
-            source.Dispose();
         }
     }
 }

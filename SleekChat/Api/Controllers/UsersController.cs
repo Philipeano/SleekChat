@@ -14,19 +14,19 @@ namespace SleekChat.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IUserData userData;
         private readonly ICurrentUser currentUser;
+        private readonly IUserData userData;
         private readonly ValidationHelper validator;
         private readonly FormatHelper formatter;
-        public readonly HttpHelper httpHelper;
+        private readonly HttpHelper httpHelper;
         private KeyValuePair<bool, string> validationResult;
         private readonly IOptions<AppSettings> config;
 
         public UsersController(IUserData userData, IOptions<AppSettings> config, ICurrentUser currentUser)
         {
+            this.currentUser = currentUser;
             this.userData = userData;
             this.config = config;
-            this.currentUser = currentUser;
             validator = new ValidationHelper();
             formatter = new FormatHelper();
             httpHelper = new HttpHelper();
