@@ -34,7 +34,7 @@ namespace SleekChat.Data.SqlServerDataService
             dbcontext.Groups.Add(newGroup);
 
             // Add creator as group member
-            _membershipData.AddGroupMember(newGroup.Id, creatorId, "Creator");
+            _ = membershipData.AddGroupMember(newGroup.Id, creatorId, "Creator");
             Commit();
             return newGroup;
         }
@@ -53,12 +53,11 @@ namespace SleekChat.Data.SqlServerDataService
                 .SingleOrDefault(g => g.Id == groupId && g.IsActive == true);
         }
 
-        public Group UpdateGroup(Guid id, string title, string purpose, bool isActive, out Group updatedGroup)
+        public Group UpdateGroup(Guid id, string title, string purpose, out Group updatedGroup)
         {
             updatedGroup = GetGroupById(id);
             updatedGroup.Title = title;
             updatedGroup.Purpose = purpose;
-            updatedGroup.IsActive = isActive;
 
             EntityEntry<Group> entry = dbcontext.Groups.Attach(updatedGroup);
             entry.State = EntityState.Modified;

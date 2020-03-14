@@ -46,14 +46,13 @@ namespace SleekChat.Data.InMemoryDataService
             return groups.SingleOrDefault(g => g.Id == groupId);
         }
 
-        public Group UpdateGroup(Guid id, string title, string purpose, bool isActive, out Group updatedGroup)
+        public Group UpdateGroup(Guid id, string title, string purpose, out Group updatedGroup)
         {
             IEnumerable<Group> query = groups.Where(g => g.Id == id)
                        .Select(g =>
                        {
                            g.Title = title;
                            g.Purpose = purpose;
-                           g.IsActive = isActive;
                            return g;
                        });
             updatedGroup = query.First();

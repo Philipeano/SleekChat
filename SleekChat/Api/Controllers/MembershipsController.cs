@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SleekChat.Core.Entities;
 using SleekChat.Data.Contracts;
@@ -9,24 +8,30 @@ using SleekChat.Data.Helpers;
 
 namespace SleekChat.Api.Controllers
 {
+    [Authorize]
     [ApiController]
     public class MembershipsController : ControllerBase
     {
+        private readonly ICurrentUser currentUser;
+        private readonly IMembershipData membershipData;
         private readonly IGroupData groupData;
         private readonly IUserData userData;
-        private readonly IMembershipData membershipData;
         private readonly ValidationHelper validator;
         private readonly FormatHelper formatter;
+        private readonly HttpHelper httpHelper;
         private KeyValuePair<bool, string> validationResult;
 
-        public MembershipsController(IGroupData groupData, IUserData userData, IMembershipData membershipData)
+        public MembershipsController(IGroupData groupData, IUserData userData, IMembershipData membershipData, ICurrentUser currentUser)
         {
+            this.currentUser = currentUser;
+            this.membershipData = membershipData;
             this.groupData = groupData;
             this.userData = userData;
-            this.membershipData = membershipData;
             validator = new ValidationHelper();
             formatter = new FormatHelper();
+            httpHelper = new HttpHelper();
         }
+
 
         // GET: api/memberships?memberId
         [HttpGet("api/memberships")]
@@ -53,6 +58,7 @@ namespace SleekChat.Api.Controllers
                 : (ActionResult)Ok(formatter.Render(membershipData.GetMembershipsForAUser(reqMemberId), "Memberships", Operation.Retrieved));
         }
 
+
         //GET: api/groups/id/memberships
         [HttpGet("api/groups/{grpId}/memberships")]
         public ActionResult GetByGroupId([FromRoute] string grpId)
@@ -73,26 +79,12 @@ namespace SleekChat.Api.Controllers
             return Ok(formatter.Render(membershipData.GetGroupMemberships(reqGroupId), "Memberships", Operation.Retrieved));
         }
 
+
         // POST: api/groups/id/memberships
         [HttpPost("api/groups/{grpId}/memberships")]
-        public ActionResult Post([FromRoute] string grpId, [FromBody]RequestBody reqBody, [FromHeader] string userId)
+        public ActionResult Post([FromRoute] string grpId, [FromBody] MbrshpReqBody reqBody)
         {
-            (string memberId, _, _, _) = reqBody;
-
-            // Validate current user's id
-            validationResult = validator.IsBlank("current user id", userId);
-            if (validationResult.Key == false)
-                return BadRequest(formatter.Render(validationResult));
-
-            validationResult = validator.IsValidGuid("current user id", userId);
-            if (validationResult.Key == false)
-                return BadRequest(formatter.Render(validationResult));
-
-            Guid reqUserId = Guid.Parse(userId);
-
-            User currentUser = userData.GetUserById(reqUserId);
-            if (currentUser == null)
-                return NotFound(formatter.Render(validator.Result("Your user id is invalid.")));
+            string memberId = reqBody.MemberId;
 
             // Validate specified group id
             validationResult = validator.IsBlank("group id", grpId);
@@ -124,11 +116,13 @@ namespace SleekChat.Api.Controllers
             if (newMember == null)
                 return NotFound(formatter.Render(validator.Result("The specified new member id does not match any existing user.")));
 
+            Guid userId = currentUser.GetUserId();
+
             // Check if current user created the group
-            if (!groupData.IsGroupCreator(reqGroupId, reqUserId))
+            if (!groupData.IsGroupCreator(reqGroupId, userId))
             {
                 formatter.RenderJson(validator.Result("You are not the creator of this group."), out string responseTxt);
-                Forbid(Response, responseTxt);
+                httpHelper.Forbid(Response, responseTxt);
                 return null;
             }
 
@@ -140,9 +134,10 @@ namespace SleekChat.Api.Controllers
             return Created("", formatter.Render(newMembership, "Membership", Operation.Created));
         }
 
+
         // DELETE: api/groups/id/memberships?memberId
         [HttpDelete("api/groups/{grpId}/memberships")]
-        public ActionResult Delete([FromRoute] string grpId, [FromQuery(Name = "memberId")] string memberId, [FromHeader] string userId)
+        public ActionResult Delete([FromRoute] string grpId, [FromQuery(Name = "memberId")] string memberId)
         {
             // If member id is not supplied, abort the operation
             if (!Request.Query.ContainsKey("memberId"))
@@ -158,21 +153,6 @@ namespace SleekChat.Api.Controllers
                 return BadRequest(formatter.Render(validationResult));
 
             Guid reqMemberId = Guid.Parse(memberId);
-
-            // Validate current user's id
-            validationResult = validator.IsBlank("user id", userId);
-            if (validationResult.Key == false)
-                return BadRequest(formatter.Render(validationResult));
-
-            validationResult = validator.IsValidGuid("user id", userId);
-            if (validationResult.Key == false)
-                return BadRequest(formatter.Render(validationResult));
-
-            Guid reqUserId = Guid.Parse(userId);
-
-            User currentUser = userData.GetUserById(reqUserId);
-            if (currentUser == null)
-                return NotFound(formatter.Render(validator.Result("Your user id is invalid.")));
 
             // Validate specified group id
             validationResult = validator.IsBlank("group id", grpId);
@@ -197,27 +177,18 @@ namespace SleekChat.Api.Controllers
             if (!membershipData.IsGroupMember(reqGroupId, reqMemberId))
                 return NotFound(formatter.Render(validator.Result($"The user '{member.Username}' is not a member of this group.")));
 
+            Guid userId = currentUser.GetUserId();
+
             // Check if current user created the group or is the member to be removed
-            if (groupData.IsGroupCreator(reqGroupId, reqUserId) || (reqMemberId == reqUserId))
+            if (groupData.IsGroupCreator(reqGroupId, userId) || (reqMemberId == userId))
             {
                 membershipData.RemoveGroupMember(reqGroupId, reqMemberId);
                 return Ok(formatter.Render(null, "Membership", Operation.Deleted));
             }
 
             formatter.RenderJson(validator.Result("Sorry, you must either be the creator of this group, or the member to be removed."), out string responseTxt);
-            Forbid(Response, responseTxt);
+            httpHelper.Forbid(Response, responseTxt);
             return null;
-        }
-
-        // Custom method for 403:Forbidden response
-        private void Forbid(HttpResponse responseObj, string responseJson)
-        {
-            CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken token = source.Token;
-            responseObj.StatusCode = 403;
-            responseObj.ContentType = "application/json";
-            _ = responseObj.WriteAsync(responseJson, System.Text.Encoding.Default, token);
-            source.Dispose();
         }
     }
 }

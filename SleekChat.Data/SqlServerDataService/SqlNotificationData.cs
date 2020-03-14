@@ -36,22 +36,20 @@ namespace SleekChat.Data.SqlServerDataService
         {
             return dbcontext.Notifications
                 .Include(n => n.Recipient).Where(n => n.Recipient.IsActive == true)
-                .Include(n => n.Message);
+                .Include(n => n.Message).ThenInclude(m => m.Sender)
+                .Include(n => n.Message).ThenInclude(m => m.Group)
+                .Where(n => n.Message.Group.IsActive == true);
         }
 
         public IEnumerable<Notification> GetNotificationsForAUser(Guid userId)
         {
-            return dbcontext.Notifications
-                .Include(n => n.Recipient).Where(n => n.Recipient.IsActive == true)
-                .Include(n => n.Message)
+            return GetAllNotifications()
                 .Where(n => n.RecipientId == userId);
         }
 
         public Notification GetNotificationById(Guid notificationId)
         {
-            return dbcontext.Notifications
-                .Include(n => n.Recipient).Where(n => n.Recipient.IsActive == true)
-                .Include(n => n.Message)
+            return GetAllNotifications()
                 .SingleOrDefault(n => n.Id == notificationId);
         }
 

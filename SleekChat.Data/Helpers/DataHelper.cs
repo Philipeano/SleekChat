@@ -12,45 +12,26 @@ namespace SleekChat.Data.Helpers
             return Guid.NewGuid();
         }
 
-        public static string Encrypt(string rawText)
-        {
-            string encryptedText = rawText;
-            // Perform encryption here
-            return encryptedText;
-        }
-
-        public static string Decrypt(string encryptedText)
-        {
-            string decryptedText = encryptedText;
-            // Perform decryption here
-            return decryptedText;
-        }
         public static PriorityLevel GetPriority(string priority)
         {
-            switch (priority)
+            return priority switch
             {
-                case "Critical":
-                    return PriorityLevel.Critical;
-                case "Urgent":
-                    return PriorityLevel.Urgent;
-                default:
-                    return PriorityLevel.Normal;
-            }
+                "Critical" => PriorityLevel.Critical,
+                "Urgent" => PriorityLevel.Urgent,
+                _ => PriorityLevel.Normal,
+            };
         }
+
         public static NotificationStatus GetStatus(string status)
         {
-            switch (status)
+            return status switch
             {
-                case "Read":
-                    return NotificationStatus.Read;
-                case "Archived":
-                    return NotificationStatus.Archived;
-                default:
-                    return NotificationStatus.Unread;
-            }
-        }        
+                "Read" => NotificationStatus.Read,
+                "Archived" => NotificationStatus.Archived,
+                _ => NotificationStatus.Unread,
+            };
+        }
     }
-
 
     public class SimplifiedUser
     {
@@ -58,6 +39,20 @@ namespace SleekChat.Data.Helpers
         public string Username { get; set; }
         public string Email { get; set; }
         public DateTime Registered { get; set; }
+    }
+
+    public class AuthenticatedUser: SimplifiedUser
+    {
+        public string Token { get; set; }
+
+        public void Deconstruct(out Guid id, out string username, out string email, out DateTime registered, out string token)
+        {
+            id = Id;
+            username = Username;
+            email = Email;
+            registered = Registered;
+            token = Token;
+        }
     }
 
     public class SimplifiedGroup
@@ -108,6 +103,17 @@ namespace SleekChat.Data.Helpers
         [JsonIgnore]
         public Guid MessageId { get; set; }
         public SimplifiedMessage Message { get; set; }
+        public string Status { get; set; }
+        public DateTime Received { get; set; }
+    }
+
+    public class BasicNotification
+    {
+        public Guid Id { get; set; }
+        public string Group { get; set; }
+        public string Sender { get; set; }
+        public string Recipient { get; set; }
+        public string Message { get; set; }
         public string Status { get; set; }
         public DateTime Received { get; set; }
     }

@@ -1,12 +1,21 @@
 ﻿using System.Text.Json;
 using System.Threading;
-using SleekChat.Core.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace SleekChat.Data.Helpers
 {
-    public abstract class HttpHelper
+    public class HttpHelper
     {
 
+        public void Forbid(HttpResponse responseObj, string responseJson)
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+            responseObj.StatusCode = 403;
+            responseObj.ContentType = "application/json";
+            _ = responseObj.WriteAsync(responseJson, System.Text.Encoding.Default, token);
+            source.Dispose();
+        }
     }
 
 
@@ -17,7 +26,8 @@ namespace SleekChat.Data.Helpers
         Updated,
         Deleted,
         Registered,
-        Posted
+        Posted,
+        Authenticated
     }
 
 
@@ -27,71 +37,80 @@ namespace SleekChat.Data.Helpers
         public string Message { get; set; }
         public dynamic Data { get; set; }
 
-        public override string ToString() => JsonSerializer.Serialize(this, null);
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this, null);
+        }
     }
 
 
-    public class RequestBody
+    // Request body for ..api/Users/authenticate
+    public class AuthReqBody
     {
-        public string Id { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+
+
+    // Request body for ..api/Users/register
+    public class UserReqBody
+    {
         public string Username { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string CPassword { get; set; }
-        public bool IsActiveUser { get; set; }
-        public string GroupId { get; set; }
-        public string MemberId { get; set; }
-        public string Title { get; set; }
-        public string Purpose { get; set; }
-        public bool IsActiveGroup { get; set; }
-        public string CreatorId { get; set; }
-        public string MemberRole { get; set; }
-        public string Content { get; set; }
-        public string Priority { get; set; }
-        public string NotificationStatus { get; set; }
-        public string SenderId { get; set; }
 
-        // Request body for ..api/Users
-        public void Deconstruct(out string username, out string email, out string password, out string cPassword, out bool isActive)
+        public void Deconstruct(out string username, out string email, out string password, out string cPassword)
         {
             username = Username;
             email = Email;
             password = Password;
             cPassword = CPassword;
-            isActive = IsActiveUser;
         }
+    }
 
-        // Request body for ..api/Groups
+
+    // Request body for ..api/Groups
+    public class GroupReqBody
+    {
+        public string Title { get; set; }
+        public string Purpose { get; set; }
+        public bool IsActive { get; set; }
+
         public void Deconstruct(out string title, out string purpose, out bool isActive)
         {
-            //HINT: Pass creatorId in request header as userId
             title = Title;
             purpose = Purpose;
-            isActive = IsActiveGroup;
+            isActive = IsActive;
         }
+    }
 
-        // Request body for ..api/Memberships
-        public void Deconstruct(out string memberId, out string role, out string groupId, out bool isDefaultMember)
-        {
-            memberId = MemberId;
-            role = MemberRole;
-            groupId = null;
-            isDefaultMember = false;
-        }
 
-        // Request body for ..api/Messages
-        // public void Deconstruct(out string content, out PriorityLevel priority)
+    // Request body for ..api/Memberships
+    public class MbrshpReqBody
+    {
+        public string MemberId { get; set; }
+        public string MemberRole { get; set; }
+    }
+
+
+    // Request body for ..api/Messages
+    public class MsgRequestBody
+    {
+        public string Content { get; set; }
+        public string Priority { get; set; }
+
         public void Deconstruct(out string content, out string priority)
         {
-            //HINT: Pass senderId in request header as userId 
             content = Content;
             priority = Priority;
         }
+    }
 
-        // Request body for ..api/Notifications
-        public void Deconstruct(out string status)
-        {
-            status = NotificationStatus;
-        }
+
+    // Request body for ..api/Notifications
+    public class NotftnReqBody
+    {
+        public string NotificationStatus { get; set; }
     }
 }
