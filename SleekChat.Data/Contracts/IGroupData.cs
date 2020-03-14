@@ -12,7 +12,7 @@ namespace SleekChat.Data.Contracts
 
         public Group GetGroupById(Guid groupId);
 
-        public Group UpdateGroup(Guid id, string title, string purpose, bool isActive, out Group updatedGroup);
+        public Group UpdateGroup(Guid id, string title, string purpose, out Group updatedGroup);
 
         public void DeleteGroup(Guid groupId);
 

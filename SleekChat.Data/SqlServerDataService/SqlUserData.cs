@@ -38,7 +38,7 @@ namespace SleekChat.Data.SqlServerDataService
             return newUser;
         }
 
-        public AuthenticatedUser Authenticate(AuthRequestBody authInfo, IOptions<AppSettings> config)
+        public AuthenticatedUser Authenticate(AuthReqBody authInfo, IOptions<AppSettings> config)
         {
             User user = dbcontext.Users
                 .SingleOrDefault(u => u.Username == authInfo.Username && u.IsActive == true);

@@ -59,7 +59,7 @@ namespace SleekChat.Data.Helpers
                 {
                         new Claim(ClaimTypes.NameIdentifier, userId.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddDays(3),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(keyInBytes),
                     SecurityAlgorithms.HmacSha256Signature)

@@ -37,6 +37,5 @@ namespace SleekChat.Data.Helpers
             }
             return userId;
         }
-
     }
 }

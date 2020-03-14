@@ -126,7 +126,7 @@ namespace SleekChat.Api.Controllers
 
         // POST: api/groups/id/messages
         [HttpPost("api/groups/{grpId}/messages")]
-        public ActionResult Post([FromRoute] string grpId, [FromBody] RequestBody reqBody)
+        public ActionResult Post([FromRoute] string grpId, [FromBody] MsgRequestBody reqBody)
         {
             (string content, string priority) = reqBody;
 
@@ -170,7 +170,7 @@ namespace SleekChat.Api.Controllers
 
         // PUT: api/groups/id/messages/id
         [HttpPut("api/groups/{grpId}/messages/{msgId}")]
-        public ActionResult Put([FromRoute] string grpId, [FromRoute] string msgId, [FromBody] RequestBody reqBody)
+        public ActionResult Put([FromRoute] string grpId, [FromRoute] string msgId, [FromBody] MsgRequestBody reqBody)
         {
             (string content, string priority) = reqBody;
 

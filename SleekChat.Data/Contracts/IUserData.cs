@@ -10,7 +10,7 @@ namespace SleekChat.Data.Contracts
     {
         public User CreateNewUser(string username, string email, string password, bool isActive);
 
-        public AuthenticatedUser Authenticate(AuthRequestBody authInfo, IOptions<AppSettings> config);
+        public AuthenticatedUser Authenticate(AuthReqBody authInfo, IOptions<AppSettings> config);
 
         public IEnumerable<User> GetAllUsers();
 

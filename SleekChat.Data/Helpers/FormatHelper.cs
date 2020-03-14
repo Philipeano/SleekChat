@@ -29,6 +29,7 @@ namespace SleekChat.Data.Helpers
             return response;
         }
 
+
         public void RenderJson(KeyValuePair<bool, string> validationResult, out string responseJson)
         {
             responseJson = Render(validationResult).ToString();
@@ -38,7 +39,7 @@ namespace SleekChat.Data.Helpers
         private dynamic Simplify(string type, dynamic item)
         {
             if (item is null) return null;
-            dynamic result; User objUser; Group objGroup; Message objMessage;
+            dynamic result; User objUser; Group objGroup;
             switch (type)
             {
                 case "User":
@@ -67,10 +68,17 @@ namespace SleekChat.Data.Helpers
                     result.Sender = Simplify("User", objUser);
                     break;
                 case "Notification":
-                    result = new SimplifiedNotification();
-                    (result.Id, result.RecipientId, objUser, result.MessageId, objMessage, result.Status, result.Received) = (Notification)item;
-                    result.Message = Simplify("Message", objMessage);
-                    result.Recipient = Simplify("User", objUser);
+                    Notification notification = (Notification)item;
+                    result = new BasicNotification()
+                    {
+                        Id = notification.Id,
+                        Group = notification.Message.Group.Title,
+                        Sender = notification.Message.Sender.Username,
+                        Recipient = notification.Recipient.Username,
+                        Message = notification.Message.Content,
+                        Status = notification.Status.ToString(),
+                        Received = notification.DateCreated
+                    };
                     break;
                 default:
                     result = null;
@@ -92,5 +100,3 @@ namespace SleekChat.Data.Helpers
         }
     }
 }
-
-

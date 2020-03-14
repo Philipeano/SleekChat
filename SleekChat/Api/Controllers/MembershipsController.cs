@@ -82,9 +82,9 @@ namespace SleekChat.Api.Controllers
 
         // POST: api/groups/id/memberships
         [HttpPost("api/groups/{grpId}/memberships")]
-        public ActionResult Post([FromRoute] string grpId, [FromBody]RequestBody reqBody)
+        public ActionResult Post([FromRoute] string grpId, [FromBody] MbrshpReqBody reqBody)
         {
-            (string memberId, _, _, _) = reqBody;
+            string memberId = reqBody.MemberId;
 
             // Validate specified group id
             validationResult = validator.IsBlank("group id", grpId);

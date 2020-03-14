@@ -64,9 +64,9 @@ namespace SleekChat.Api.Controllers
         // POST: api/users/register
         [AllowAnonymous]
         [HttpPost("register")]
-        public ActionResult Register([FromBody] RequestBody reqBody)
+        public ActionResult Register([FromBody] UserReqBody reqBody)
         {
-            (string username, string email, string password, string cPassword, _) = reqBody;
+            (string username, string email, string password, string cPassword) = reqBody;
 
             validationResult = validator.IsBlank("username", username);
             if (validationResult.Key == false)
@@ -98,7 +98,7 @@ namespace SleekChat.Api.Controllers
         // POST: api/users/authenticate
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public ActionResult Authenticate([FromBody] AuthRequestBody reqBody)
+        public ActionResult Authenticate([FromBody] AuthReqBody reqBody)
         {
             validationResult = validator.IsBlank("username", reqBody.Username);
             if (validationResult.Key == false)
@@ -118,9 +118,9 @@ namespace SleekChat.Api.Controllers
 
         // PUT: api/users/id
         [HttpPut("{id}")]
-        public ActionResult Put([FromRoute] string id, [FromBody] RequestBody reqBody)
+        public ActionResult Put([FromRoute] string id, [FromBody] UserReqBody reqBody)
         {
-            (string username, string email, string password, string cPassword, _) = reqBody;           
+            (string username, string email, string password, string cPassword) = reqBody;
 
             validationResult = validator.IsBlank("User Id", id);
             if (validationResult.Key == false)

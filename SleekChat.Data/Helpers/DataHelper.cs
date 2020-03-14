@@ -30,7 +30,7 @@ namespace SleekChat.Data.Helpers
                 "Archived" => NotificationStatus.Archived,
                 _ => NotificationStatus.Unread,
             };
-        }        
+        }
     }
 
     public class SimplifiedUser
@@ -103,6 +103,17 @@ namespace SleekChat.Data.Helpers
         [JsonIgnore]
         public Guid MessageId { get; set; }
         public SimplifiedMessage Message { get; set; }
+        public string Status { get; set; }
+        public DateTime Received { get; set; }
+    }
+
+    public class BasicNotification
+    {
+        public Guid Id { get; set; }
+        public string Group { get; set; }
+        public string Sender { get; set; }
+        public string Recipient { get; set; }
+        public string Message { get; set; }
         public string Status { get; set; }
         public DateTime Received { get; set; }
     }

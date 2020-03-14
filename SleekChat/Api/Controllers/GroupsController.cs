@@ -62,7 +62,7 @@ namespace SleekChat.Api.Controllers
 
         // POST: api/groups
         [HttpPost]
-        public ActionResult Post([FromBody]RequestBody reqBody)
+        public ActionResult Post([FromBody] GroupReqBody reqBody)
         {
             (string title, string purpose, _) = reqBody;
 
@@ -89,7 +89,7 @@ namespace SleekChat.Api.Controllers
 
         // PUT: api/groups/id
         [HttpPut("{id}")]
-        public ActionResult Put([FromRoute] string id, [FromBody]RequestBody reqBody)
+        public ActionResult Put([FromRoute] string id, [FromBody] GroupReqBody reqBody)
         {
             (string title, string purpose, bool isActive) = reqBody;
 
@@ -129,7 +129,7 @@ namespace SleekChat.Api.Controllers
             if (groupData.TitleAlreadyTaken(title, out Group existingGroup) && (reqGroupId != existingGroup.Id))
                 return Conflict(formatter.Render(validator.Result($"The title '{title}' is already in use by another group.")));
 
-            groupData.UpdateGroup(reqGroupId, title, purpose, isActive, out Group updatedGroup);
+            groupData.UpdateGroup(reqGroupId, title, purpose, out Group updatedGroup);
             return Ok(formatter.Render(updatedGroup, "Group", Operation.Updated));
         }
 

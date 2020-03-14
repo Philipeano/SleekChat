@@ -36,7 +36,7 @@ namespace SleekChat.Data.InMemoryDataService
             return newUser;
         }
 
-        public AuthenticatedUser Authenticate(AuthRequestBody authInfo, IOptions<AppSettings> config)
+        public AuthenticatedUser Authenticate(AuthReqBody authInfo, IOptions<AppSettings> config)
         {
             User user = users.SingleOrDefault(u => u.Username == authInfo.Username);
             if (user == null)
