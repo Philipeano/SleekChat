@@ -7,8 +7,8 @@
 SleekChat is a simple REST API that enables friends and colleagues create groups for messaging. 
 This version of the app is strictly a back-end service that can be consumed with any HTTP client. 
 
-- View the full API documentation [here](coming soon)  
-- Access the hosted API [here](coming soon).
+- View the full API documentation [here](/apidocs)  
+- Access the hosted API [here](/api).
 
 
 ## Main features
@@ -22,40 +22,31 @@ This version of the app is strictly a back-end service that can be consumed with
 - Members of a group receive notifications when a new message is posted.
 - Message senders can update or delete their messages.
 
-<br>
 
 ## Endpoints
 
 | Endpoint URL       | Method    | Functionality   |
 | :----------------- | :------------- | :-------------- |
-|                      |        |                               |
 | **_Users_**          |        |                               |
-|                      |        |                               |
 | /users               | GET    | Fetch all registered users    |  
 | /users/:userId       | GET    | Fetch a specified user    |
 | /users/register      | POST   | Register a new user    |  
 | /users/authenticate  | POST   | Sign in a registered user  |  
 | /users/:userId       | PUT    | Update a specified user    |
 | /users/:userId       | DELETE | Delete specified user    |
-|                      |        |                               |
 | **_Groups_**         |        |                               |
-|                      |        |                               |
 | /groups              | GET    | Fetch all existing groups |  
 | /groups/:groupId     | GET    | Fetch a specified group |
 | /groups              | POST   | Create a new group |  
 | /groups/:groupId     | PUT    | Update a specified group |
 | /groups/:groupId     | DELETE | Delete a specified group |
-|                      |        |                               |
 | **_Memberships_**                             |        |                               |
-|                      |        |                               |
 | /memberships                                  | GET    | Fetch all memberships |  
 | /memberships?memberId=:userId                 | GET    | Fetch all memberships for the specified user |  
 | /groups/:groupId/memberships                  | GET    | Fetch all memberships for the specified group |
 | /groups/:groupId/memberships                  | POST   | Add a user to the specified group |  
 | /groups/:groupId/memberships?memberId=:userId | DELETE | Remove a specified user from the group |
-|                      |        |                               |
 | **_Messages_**                             |        |                               |
-|                      |        |                               |
 | /messages                                  | GET    | Fetch all messages |  
 | /messages?senderId=:userId                 | GET    | Fetch all messages sent by the specified user |  
 | /groups/:groupId/messages                  | GET    | Fetch all messages posted in the specified group |
@@ -63,17 +54,11 @@ This version of the app is strictly a back-end service that can be consumed with
 | /groups/:groupId/messages                  | POST   | Post a new message within the specified group |  
 | /groups/:groupId/messages/:messageId       | PUT    | Update a message previously sent to the group |
 | /groups/:groupId/messages/:messageId       | DELETE |  Delete a message previously sent to the group |
-|                      |        |                               |
 | **_Notifications_**             |        |                               |
-|                      |        |                               |
 | /notifications                  | GET    | Fetch all notifications |  
 | /notifications/:notificationId  | GET    | Fetch a specific notification |
 | /notifications/:notificationId  | PUT    | Update a specific notification received by this user |
 | /notifications/:notificationId  | DELETE | Delete a specific notification received by this user |
-
-
-
-<br>
 
 
 ## Built with
