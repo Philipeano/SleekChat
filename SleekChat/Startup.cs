@@ -12,6 +12,7 @@ using SleekChat.Data.Contracts;
 using SleekChat.Data.Helpers;
 //using SleekChat.Data.InMemoryDataService;
 using SleekChat.Data.SqlServerDataService;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SleekChat
 {
@@ -62,6 +63,17 @@ namespace SleekChat
             services.AddScoped<IMessageData, SqlMessageData>();
             services.AddScoped<INotificationData, SqlNotificationData>();
             services.AddScoped<ICurrentUser, CurrentUser>();
+
+            services.AddSwaggerGen(setupAction =>
+            {
+                setupAction.SwaggerDoc("SleekChatOpenAPISpecification",
+                    new Microsoft.OpenApi.Models.OpenApiInfo()
+                    {
+                        Title = "SleekChat API",
+                        Version = "1"
+                    });
+
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -74,6 +86,8 @@ namespace SleekChat
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseRouting();
+
+            app.UseSwagger();
 
             app.UseAuthentication();
 
