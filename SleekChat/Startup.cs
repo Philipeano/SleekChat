@@ -89,6 +89,15 @@ namespace SleekChat
 
             app.UseSwagger();
 
+            app.UseSwaggerUI(setupAction => 
+            {
+                setupAction.SwaggerEndpoint(
+                    "/swagger/SleekChatOpenAPISpecification/swagger.json",
+                    "SleekChat API"
+                    );
+                setupAction.RoutePrefix = "";
+            });
+
             app.UseAuthentication();
 
             app.UseAuthorization();
