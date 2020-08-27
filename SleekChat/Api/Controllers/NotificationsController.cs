@@ -32,6 +32,11 @@ namespace SleekChat.Api.Controllers
 
 
         // GET: api/notifications?recipientId
+        /// <summary>
+        /// Fetch all existing notifications, or notifications received by a specific user if 'recipientId' is provided
+        /// </summary>
+        /// <param name="recipientId">The 'id' of the user whose notifications are to be fetched (Optional)</param>
+        /// <returns>A list of notifications, each with 'id', 'recipient', 'message', 'status' and 'dateReceived' fields</returns>
         [HttpGet("api/notifications")]
         public ActionResult GetAll([FromQuery(Name = "recipientId")] string recipientId = "")
         {
@@ -58,6 +63,11 @@ namespace SleekChat.Api.Controllers
 
 
         // GET: api/notifications/id
+        /// <summary>
+        /// Fetch a notification with the specified 'id'
+        /// </summary>
+        /// <param name="id">The 'id' of the notification to be fetched</param>
+        /// <returns>A notification with 'id', 'recipient', 'message', 'status' and 'dateReceived' fields</returns>
         [HttpGet("api/notifications/{id}")]
         public ActionResult GetById([FromRoute] string id)
         {
@@ -80,6 +90,12 @@ namespace SleekChat.Api.Controllers
 
 
         // PATCH: api/notifications/id?newStatus
+        /// <summary>
+        /// Update a notification with the specified 'id' with the value of 'newStatus'
+        /// </summary>
+        /// <param name="id">The 'id' of the notification to be updated</param>
+        /// <param name="status">The new status of the notification</param>
+        /// <returns>The newly updated notification with 'id', 'recipient', 'message', 'status' and 'dateReceived' fields</returns>
         [HttpPatch("api/notifications/{id}")]
         public ActionResult Patch([FromRoute] string id, [FromQuery(Name = "newStatus")] string status)
         {
@@ -121,6 +137,11 @@ namespace SleekChat.Api.Controllers
 
 
         // DELETE: api/notifications/id
+        /// <summary>
+        /// Update a notification with the specified 'id'
+        /// </summary>
+        /// <param name="id">The 'id' of the notification to be deleted</param>
+        /// <returns></returns>
         [HttpDelete("api/notifications/{id}")]
         public ActionResult Delete([FromRoute] string id)
         {

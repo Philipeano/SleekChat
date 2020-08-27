@@ -33,6 +33,10 @@ namespace SleekChat.Api.Controllers
 
 
         // GET: api/groups
+        /// <summary>
+        /// Fetch all groups
+        /// </summary>
+        /// <returns>A list of groups, each with 'id', 'title', 'purpose', 'creator' and 'dateCreated' fields</returns>
         [HttpGet]
         public ActionResult Get()
         {
@@ -41,6 +45,11 @@ namespace SleekChat.Api.Controllers
 
 
         // GET: api/groups/id
+        /// <summary>
+        /// Fetch a group with the specified 'id'
+        /// </summary>
+        /// <param name="id">The 'id' of the group to be fetched</param>
+        /// <returns>A group with 'id', 'title', 'purpose', 'creator' and 'dateCreated' fields</returns>
         [HttpGet("{id}")]
         public ActionResult Get(string id)
         {
@@ -61,6 +70,11 @@ namespace SleekChat.Api.Controllers
 
 
         // POST: api/groups
+        /// <summary>
+        /// Create a new group with the fields supplied in 'reqBody'  
+        /// </summary>
+        /// <param name="reqBody">A JSON object containing 'title' and 'purpose' fields</param>
+        /// <returns>The newly created group with 'id', 'title', 'purpose', 'creator' and 'dateCreated' fields</returns>
         [HttpPost]
         public ActionResult Post([FromBody] GroupReqBody reqBody)
         {
@@ -88,6 +102,12 @@ namespace SleekChat.Api.Controllers
 
 
         // PUT: api/groups/id
+        /// <summary>
+        /// Update an existing group with the fields supplied in 'reqBody'  
+        /// </summary>
+        /// <param name="id">The 'id' of the group to be updated</param>
+        /// <param name="reqBody">A JSON object containing 'title' and 'purpose' fields</param>
+        /// <returns>The updated group with 'id', 'title', 'purpose', 'creator' and 'dateCreated' fields</returns>
         [HttpPut("{id}")]
         public ActionResult Put([FromRoute] string id, [FromBody] GroupReqBody reqBody)
         {
@@ -135,6 +155,11 @@ namespace SleekChat.Api.Controllers
 
 
         // DELETE: api/groups/id
+        /// <summary>
+        /// Delete a group with the specified 'id'   
+        /// </summary>
+        /// <param name="id">The 'id' of the group to be deleted</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] string id)
         {

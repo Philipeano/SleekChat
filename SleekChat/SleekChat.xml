@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SleekChat</name>
+    </assembly>
+    <members>
+        <member name="M:SleekChat.Api.Controllers.GroupsController.Get">
+            <summary>
+            Fetch all groups
+            </summary>
+            <returns>A list of groups, each with 'id', 'title', 'purpose', 'creator' and 'dateCreated' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.GroupsController.Get(System.String)">
+            <summary>
+            Fetch a group with the specified 'id'
+            </summary>
+            <param name="id">The 'id' of the group to be fetched</param>
+            <returns>A group with 'id', 'title', 'purpose', 'creator' and 'dateCreated' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.GroupsController.Post(SleekChat.Data.Helpers.GroupReqBody)">
+            <summary>
+            Create a new group with the fields supplied in 'reqBody'  
+            </summary>
+            <param name="reqBody">A JSON object containing 'title' and 'purpose' fields</param>
+            <returns>The newly created group with 'id', 'title', 'purpose', 'creator' and 'dateCreated' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.GroupsController.Put(System.String,SleekChat.Data.Helpers.GroupReqBody)">
+            <summary>
+            Update an existing group with the fields supplied in 'reqBody'  
+            </summary>
+            <param name="id">The 'id' of the group to be updated</param>
+            <param name="reqBody">A JSON object containing 'title' and 'purpose' fields</param>
+            <returns>The updated group with 'id', 'title', 'purpose', 'creator' and 'dateCreated' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.GroupsController.Delete(System.String)">
+            <summary>
+            Delete a group with the specified 'id'   
+            </summary>
+            <param name="id">The 'id' of the group to be deleted</param>
+            <returns></returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.MembershipsController.Get(System.String)">
+            <summary>
+            Fetch all existing memberships, or a specific user's memberships if 'memberId' is provided
+            </summary>
+            <param name="memberId">The 'id' of the user whose memberships are to be fetched (Optional)</param>
+            <returns>A list of memberships, each with 'id', 'group', 'member', 'role' and 'dateJoined' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.MembershipsController.GetByGroupId(System.String)">
+            <summary>
+            Fetch all memberships for the group with specified 'grpId'
+            </summary>
+            <param name="grpId">The 'id' of the group whose memberships are to be fetched</param>
+            <returns>A list of memberships, each with 'id', 'group', 'member', 'role' and 'dateJoined' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.MembershipsController.Post(System.String,SleekChat.Data.Helpers.MbrshpReqBody)">
+            <summary>
+            Add a user whose 'id' is supplied in 'reqBody' to the group with id 'grpId' 
+            </summary>
+            <param name="grpId">The 'id' of the group to which the new member will be added</param>
+            <param name="reqBody">A JSON object containing the 'id' of the user to be added</param>
+            <returns>The new membership with 'id', 'group', 'member', 'role' and 'dateJoined' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.MembershipsController.Delete(System.String,System.String)">
+            <summary>
+            Remove a user with id 'memberId' from the group with id 'grpId' 
+            </summary>
+            <param name="grpId">The 'id' of the group from which the user will be removed</param>
+            <param name="memberId">The 'id' of the user to be removed from the group</param>
+            <returns></returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.MessagesController.GetAll(System.String)">
+            <summary>
+            Fetch all existing messages, or messages sent by a specific user if 'senderId' is provided
+            </summary>
+            <param name="senderId">The 'id' of the user whose sent messages are to be fetched (Optional)</param>
+            <returns>A list of messages, each with 'id', 'content', 'status', 'priority', 'group', 'sender' and 'dateSent' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.MessagesController.GetById(System.String)">
+            <summary>
+            Fetch a message with the specified 'msgId'
+            </summary>
+            <param name="msgId">The 'id' of the message to be fetched</param>
+            <returns>A message with 'id', 'content', 'status', 'priority', 'group', 'sender' and 'dateSent' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.MessagesController.GetByGroupId(System.String,System.String)">
+            <summary>
+            Fetch all messages for the group, or messages sent to the group by a specific user if 'senderId' is provided
+            </summary>
+            <param name="grpId">The 'id' of the group for which messages are to be fetched</param>
+            <param name="senderId">The 'id' of the user whose sent messages are to be fetched (Optional)</param>
+            <returns>A list of messages, each with 'id', 'content', 'status', 'priority', 'group', 'sender' and 'dateSent' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.MessagesController.Post(System.String,SleekChat.Data.Helpers.MsgRequestBody)">
+            <summary>
+            Send a new message to the specified group using the fields supplied in 'reqBody'  
+            </summary>
+            <param name="grpId">The 'id' of the group to which the message will be posted</param>
+            <param name="reqBody">A JSON object containing 'content' and 'priority' fields</param>
+            <returns>The newly posted message with 'id', 'content', 'status', 'priority', 'group', 'sender' and 'dateSent' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.MessagesController.Put(System.String,System.String,SleekChat.Data.Helpers.MsgRequestBody)">
+            <summary>
+            Update a message with id 'msgId' in the group with id 'grpId', using the fields in 'reqBody'  
+            </summary>
+            <param name="grpId">The 'id' of the group to which the message was sent</param>
+            <param name="msgId">The 'id' of the message to be updated</param>
+            <param name="reqBody">A JSON object containing 'content' and 'priority' fields</param>
+            <returns>The newly updated message with 'id', 'content', 'status', 'priority', 'group', 'sender' and 'dateSent' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.MessagesController.Delete(System.String,System.String)">
+            <summary>
+            Delete a message with id 'msgId', which was previously sent to the group with id 'grpId'  
+            </summary>
+            <param name="grpId">The 'id' of the group to which the message was sent</param>
+            <param name="msgId">The 'id' of the message to be deleted</param>
+            <returns></returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.NotificationsController.GetAll(System.String)">
+            <summary>
+            Fetch all existing notifications, or notifications received by a specific user if 'recipientId' is provided
+            </summary>
+            <param name="recipientId">The 'id' of the user whose notifications are to be fetched (Optional)</param>
+            <returns>A list of notifications, each with 'id', 'recipient', 'message', 'status' and 'dateReceived' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.NotificationsController.GetById(System.String)">
+            <summary>
+            Fetch a notification with the specified 'id'
+            </summary>
+            <param name="id">The 'id' of the notification to be fetched</param>
+            <returns>A notification with 'id', 'recipient', 'message', 'status' and 'dateReceived' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.NotificationsController.Patch(System.String,System.String)">
+            <summary>
+            Update a notification with the specified 'id' with the value of 'newStatus'
+            </summary>
+            <param name="id">The 'id' of the notification to be updated</param>
+            <param name="status">The new status of the notification</param>
+            <returns>The newly updated notification with 'id', 'recipient', 'message', 'status' and 'dateReceived' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.NotificationsController.Delete(System.String)">
+            <summary>
+            Update a notification with the specified 'id'
+            </summary>
+            <param name="id">The 'id' of the notification to be deleted</param>
+            <returns></returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.UsersController.Get">
+            <summary>
+            Fetch all registered users
+            </summary>
+            <returns>A list of users, each with 'id', 'username', 'email' and 'dateRegistered' fields </returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.UsersController.Get(System.String)">
+            <summary>
+            Fetch a user with the specified 'id'
+            </summary>
+            <param name="id">The 'id' of the user to be fetched</param>
+            <returns>A user with 'id', 'username', 'email' and 'dateRegistered' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.UsersController.Register(SleekChat.Data.Helpers.UserReqBody)">
+            <summary>
+            Register a new user with the fields supplied in 'reqBody'  
+            </summary>
+            <param name="reqBody">A JSON object containing 'username', 'email', 'password' and 'confirmPassword' fields</param>
+            <returns>The newly created user with 'username', 'email', 'password' and 'dateRegistered' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.UsersController.Authenticate(SleekChat.Data.Helpers.AuthReqBody)">
+            <summary>
+            Sign in a user with 'username' and 'password' supplied in 'reqBody'
+            </summary>
+            <param name="reqBody">A JSON object containing 'username' and 'password' fields</param>
+            <returns>Authenticated user with 'id', 'username', 'email' and 'dateRegistered' fields, along with a 'token' </returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.UsersController.Put(System.String,SleekChat.Data.Helpers.UserReqBody)">
+            <summary>
+            Update an existing user with the fields supplied in 'reqBody'  
+            </summary>
+            <param name="id">The 'id' of the user to be updated</param>
+            <param name="reqBody">A JSON object containing 'username', 'email', 'password' and 'confirmPassword' fields</param>
+            <returns>The updated user with 'username', 'email', 'password' and 'dateRegistered' fields</returns>
+        </member>
+        <member name="M:SleekChat.Api.Controllers.UsersController.Delete(System.String)">
+            <summary>
+            Delete a user with the specified 'id'   
+            </summary>
+            <param name="id">The 'id' of the user to be deleted</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
