@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
 using System.Text;
@@ -89,9 +90,19 @@ namespace SleekChat
                         }
                     });
 
-                var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
-                setupAction.IncludeXmlComments(xmlCommentsFullPath);
+                //Fetch all referenced projects' output XML document file paths  
+                var currentAssembly = Assembly.GetExecutingAssembly();
+                var linkedAssemblies = currentAssembly.GetReferencedAssemblies();
+                var fullAssemblyList = linkedAssemblies.Union(new AssemblyName[] { currentAssembly.GetName() });
+                var xmlCommentFiles = fullAssemblyList
+                    .Select(a => Path.Combine(AppContext.BaseDirectory, $"{a.Name}.xml"))
+                    .Where(f => File.Exists(f))
+                    .ToArray();
+
+                foreach (string xmlFile in xmlCommentFiles)
+                {
+                    setupAction.IncludeXmlComments(xmlFile);
+                }
             });
         }
 
