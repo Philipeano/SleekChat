@@ -71,8 +71,9 @@ This version of the app is strictly a back-end service that can be consumed with
 - Server technology: ```ASP.Net Core```
 - Database system: ```Microsoft SQL Server```
 - ORM: ```Entity Framework Core```
-- API documentation: ```Swagger``` & ```Swashbuckle```
+- API documentation: ```Swashbuckle.AspNetCore```
 - IDE: ```Visual Studio``` & ```Visual Studio Code```
+- Target Runtime: ```.Net Core 3.1.1```
 
 
 
