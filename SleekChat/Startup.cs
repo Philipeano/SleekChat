@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -73,7 +74,19 @@ namespace SleekChat
                     new Microsoft.OpenApi.Models.OpenApiInfo()
                     {
                         Title = "SleekChat API",
-                        Version = "1"
+                        Version = "1",
+                        Description = "This API allows friends and colleagues create groups for messaging and collaboration.",
+                        Contact = new Microsoft.OpenApi.Models.OpenApiContact() 
+                        {
+                            Email = "philipeano@gmail.com",
+                            Name = "Philip Newman",
+                            Url = new Uri("https://www.twitter.com/philipeano")
+                        },
+                        License = new Microsoft.OpenApi.Models.OpenApiLicense()
+                        {
+                            Name = "MIT License",
+                            Url = new Uri("https://opensource.org/licenses/MIT")
+                        }
                     });
 
                 var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

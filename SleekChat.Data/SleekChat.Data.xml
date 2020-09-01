@@ -1,0 +1,346 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SleekChat.Data</name>
+    </assembly>
+    <members>
+        <member name="T:SleekChat.Data.Helpers.SimplifiedUser">
+            <summary>
+            A user with Id, Username, Email and Registered (date) fields
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedUser.Id">
+            <summary>
+            The id of the user
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedUser.Username">
+            <summary>
+            The username of the user
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedUser.Email">
+            <summary>
+            The email address of the user
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedUser.Registered">
+            <summary>
+            The date the user was registered
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.AuthenticatedUser">
+            <summary>
+            A signed-in user with Token, Id, Username, Email and Registered (date) fields
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.AuthenticatedUser.Token">
+            <summary>
+            The bearer token generated for the user
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.SimplifiedGroup">
+            <summary>
+            A group with Id, Title, Purpose, Creator and Created (date) fields
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedGroup.Id">
+            <summary>
+            The id of the group
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedGroup.Title">
+            <summary>
+            The title/name of the group
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedGroup.Purpose">
+            <summary>
+            The purpose or description of the group
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedGroup.Creator">
+            <summary>
+            The user who created the group
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedGroup.Created">
+            <summary>
+            The date the group was created
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.SimplifiedMembership">
+            <summary>
+            A membership with Id, Group, Member, MemberRole and Joined (date) fields
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMembership.Id">
+            <summary>
+            The id of the membership
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMembership.Group">
+            <summary>
+            The group to which the membership belongs
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMembership.Member">
+            <summary>
+            The member/user associated with the membership
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMembership.MemberRole">
+            <summary>
+            The role of the member within the group
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMembership.Joined">
+            <summary>
+            The date the member joined the group
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.SimplifiedMessage">
+            <summary>
+            A message with Id, Content, Status, Priority, Group, Sender and Sent (date) fields
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMessage.Id">
+            <summary>
+            The id of the message
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMessage.Content">
+            <summary>
+            The content/text of the message
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMessage.Status">
+            <summary>
+            The status of the message. The default is 'visible'
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMessage.Priority">
+            <summary>
+            The priority associated with the message. The default is 'normal'
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMessage.Group">
+            <summary>
+            The group within which the message was sent
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMessage.Sender">
+            <summary>
+            The user/member who sent the message
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedMessage.Sent">
+            <summary>
+            The date the message was sent
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.SimplifiedNotification">
+            <summary>
+            A notification with Id, Recipient, Message, Status, and Received (date) fields
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedNotification.Id">
+            <summary>
+            The id of the notification
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedNotification.Recipient">
+            <summary>
+            The user/member who received the notification
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedNotification.Message">
+            <summary>
+            The message associated with the notification
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedNotification.Status">
+            <summary>
+            The status of the notification. The default is 'unread'
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.SimplifiedNotification.Received">
+            <summary>
+            The date the notification was received
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.BasicNotification">
+            <summary>
+            A notification with Id, Group, Sender, Recipient, Message, Status, and Received (date) fields
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.BasicNotification.Id">
+            <summary>
+            The id of the notification
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.BasicNotification.Group">
+            <summary>
+            The group associated with the notification
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.BasicNotification.Sender">
+            <summary>
+            The user/member who sent the message associated with the notification
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.BasicNotification.Recipient">
+            <summary>
+            The user/member who received the notification
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.BasicNotification.Message">
+            <summary>
+            The content/text of the message associated with the notification
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.BasicNotification.Status">
+            <summary>
+            The status of the notification. The default is 'unread'
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.BasicNotification.Received">
+            <summary>
+            The date the notification was received
+            </summary>
+        </member>
+        <member name="M:SleekChat.Data.Helpers.HttpHelper.Forbid(Microsoft.AspNetCore.Http.HttpResponse,System.String)">
+            <summary>
+            A custom HTTP handler for generating 403Forbidden responses where the built-in handlers are inadequate
+            </summary>
+            <param name="responseObj">The response object which the server generated for the current request</param>
+            <param name="responseJson">A string representing the JSON payload to be included in the response</param>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.Operation">
+            <summary>
+            A list of operations that can be performed on the entities. 
+            These items are helpful when generating response messages.
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.ResponseBody">
+            <summary>
+            The default response body for all requests to this API with Status, Message and Data fields 
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.ResponseBody.Status">
+            <summary>
+            An one-word indication of whether the operation succeeded (normal) or failed (error)
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.ResponseBody.Message">
+            <summary>
+            A one-sentence report of the operation's outcome, or any error encountered
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.ResponseBody.Data">
+            <summary>
+            This dynamic property, if not null, contains the payload returned for a given request
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.AuthReqBody">
+            <summary>
+            Login details for a user, with Username and Password fields
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.AuthReqBody.Username">
+            <summary>
+            The username of the user
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.AuthReqBody.Password">
+            <summary>
+            The password of the user
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.UserReqBody">
+            <summary>
+            A user to be registered or updated with Username, Email, Password and CPassword (confirm password) fields 
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.UserReqBody.Username">
+            <summary>
+            The username of the user
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.UserReqBody.Email">
+            <summary>
+            The email address of the user
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.UserReqBody.Password">
+            <summary>
+            The password of the user
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.UserReqBody.CPassword">
+            <summary>
+            A re-type of the password for confirmation
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.GroupReqBody">
+            <summary>
+            A group to be created or updated with Title, Purpose and IsActive (optional) fields 
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.GroupReqBody.Title">
+            <summary>
+            The title/name of the group
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.GroupReqBody.Purpose">
+            <summary>
+            The purpose or description of the group
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.GroupReqBody.IsActive">
+            <summary>
+            Whether or not the group is active
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.MbrshpReqBody">
+            <summary>
+            A membership to be created with MemberId (user id) and MemberRole fields 
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.MbrshpReqBody.MemberId">
+            <summary>
+            The id of the user to be added to the group
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.MbrshpReqBody.MemberRole">
+            <summary>
+            The role of the new member within the group. The default is 'Member'
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.MsgRequestBody">
+            <summary>
+            A message to be posted or updated with Content and Priority fields
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.MsgRequestBody.Content">
+            <summary>
+            The content/text of the message
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.MsgRequestBody.Priority">
+            <summary>
+            The priority associated with the message. The default is 'normal'
+            </summary>
+        </member>
+        <member name="T:SleekChat.Data.Helpers.NotftnReqBody">
+            <summary>
+            A notification with Status field
+            </summary>
+        </member>
+        <member name="P:SleekChat.Data.Helpers.NotftnReqBody.NotificationStatus">
+            <summary>
+            The status of the notification
+            </summary>
+        </member>
+    </members>
+</doc>

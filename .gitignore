@@ -335,3 +335,9 @@ ASALocalRun/
 # Visual Studio Code hidden files
 *.vscode/
 *.code-workspace
+
+# MSBuild auto-generated files
+*.runtimeconfig.json
+*.runtimeconfig.dev.json
+*.dll
+*deps.json
