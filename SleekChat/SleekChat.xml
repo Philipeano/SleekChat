@@ -150,6 +150,8 @@
             Fetch all registered users
             </summary>
             <returns>A list of users, each with 'id', 'username', 'email' and 'dateRegistered' fields </returns>
+            <response code="401">Access denied. You are not signed in.</response>
+            <response code="200">Operation completed successfully</response> 
         </member>
         <member name="M:SleekChat.Api.Controllers.UsersController.Get(System.String)">
             <summary>

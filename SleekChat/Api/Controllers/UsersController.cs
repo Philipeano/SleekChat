@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SleekChat.Core.Entities;
@@ -9,6 +10,9 @@ using SleekChat.Data.Helpers;
 
 namespace SleekChat.Api.Controllers
 {
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseBody))]
+    [Produces("application/json", "application/xml")]
+    [Consumes("application/json")]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -38,7 +42,12 @@ namespace SleekChat.Api.Controllers
         /// Fetch all registered users
         /// </summary>
         /// <returns>A list of users, each with 'id', 'username', 'email' and 'dateRegistered' fields </returns>
+        /// <response code="401">Access denied. You are not signed in.</response>
+        /// <response code="200">Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet]
+        //public ActionResult<ResponseBody> Get()
         public ActionResult Get()
         {
             return Ok(formatter.Render(userData.GetAllUsers(), "Users", Operation.Retrieved));
@@ -51,6 +60,9 @@ namespace SleekChat.Api.Controllers
         /// </summary>
         /// <param name="id">The 'id' of the user to be fetched</param>
         /// <returns>A user with 'id', 'username', 'email' and 'dateRegistered' fields</returns>
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet("{id}")]
         public ActionResult Get(string id)
         {
@@ -76,9 +88,12 @@ namespace SleekChat.Api.Controllers
         /// </summary>
         /// <param name="reqBody">A JSON object containing 'username', 'email', 'password' and 'confirmPassword' fields</param>
         /// <returns>The newly created user with 'username', 'email', 'password' and 'dateRegistered' fields</returns>
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResponseBody))]
         [AllowAnonymous]
         [HttpPost("register")]
-        public ActionResult Register([FromBody] UserReqBody reqBody)
+        public ActionResult<ResponseBody> Register([FromBody] UserReqBody reqBody)
         {
             (string username, string email, string password, string cPassword) = reqBody;
 
@@ -115,6 +130,8 @@ namespace SleekChat.Api.Controllers
         /// </summary>
         /// <param name="reqBody">A JSON object containing 'username' and 'password' fields</param>
         /// <returns>Authenticated user with 'id', 'username', 'email' and 'dateRegistered' fields, along with a 'token' </returns>
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public ActionResult Authenticate([FromBody] AuthReqBody reqBody)
@@ -142,6 +159,11 @@ namespace SleekChat.Api.Controllers
         /// <param name="id">The 'id' of the user to be updated</param>
         /// <param name="reqBody">A JSON object containing 'username', 'email', 'password' and 'confirmPassword' fields</param>
         /// <returns>The updated user with 'username', 'email', 'password' and 'dateRegistered' fields</returns>
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpPut("{id}")]
         public ActionResult Put([FromRoute] string id, [FromBody] UserReqBody reqBody)
         {
@@ -200,6 +222,10 @@ namespace SleekChat.Api.Controllers
         /// </summary>
         /// <param name="id">The 'id' of the user to be deleted</param>
         /// <returns></returns>
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] string id)
         {

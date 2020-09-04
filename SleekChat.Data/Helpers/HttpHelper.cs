@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
@@ -155,6 +156,7 @@ namespace SleekChat.Data.Helpers
         /// <summary>
         /// Whether or not the group is active
         /// </summary>
+        [DefaultValue(true)]
         public bool IsActive { get; set; }
 
         public void Deconstruct(out string title, out string purpose, out bool isActive)

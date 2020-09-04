@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -15,9 +14,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using SleekChat.Data.Contracts;
 using SleekChat.Data.Helpers;
-//using SleekChat.Data.InMemoryDataService;
 using SleekChat.Data.SqlServerDataService;
-using Swashbuckle.AspNetCore.SwaggerGen;
+
 
 namespace SleekChat
 {
@@ -51,7 +49,7 @@ namespace SleekChat
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x =>
             {
-                //x.RequireHttpsMetadata = env.IsProduction(); // True for production, otherwise False
+                // x.RequireHttpsMetadata = env.IsProduction(); // True for production, otherwise False
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -71,6 +69,7 @@ namespace SleekChat
 
             services.AddSwaggerGen(setupAction =>
             {
+                // Create and configure OpenAPI specification document with basic information 
                 setupAction.SwaggerDoc("SleekChatOpenAPISpecification",
                     new Microsoft.OpenApi.Models.OpenApiInfo()
                     {
@@ -90,7 +89,7 @@ namespace SleekChat
                         }
                     });
 
-                //Fetch all referenced projects' output XML document file paths  
+                //Fetch all XML output documents, and include their content in the OpenAPI specification
                 var currentAssembly = Assembly.GetExecutingAssembly();
                 var linkedAssemblies = currentAssembly.GetReferencedAssemblies();
                 var fullAssemblyList = linkedAssemblies.Union(new AssemblyName[] { currentAssembly.GetName() });
@@ -112,6 +111,16 @@ namespace SleekChat
             {
                 app.UseDeveloperExceptionPage();
             }
+            else 
+            {
+                app.UseHsts();
+            }
+
+            app.UseStatusCodePages(async context => { 
+                context.HttpContext.Response.ContentType = "application/json";
+                if (context.HttpContext.Response.StatusCode == 401)
+                    await context.HttpContext.Response.WriteAsync(new FormatHelper().Render("Access denied! You are not signed in."));
+            });
 
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
