@@ -119,7 +119,7 @@ namespace SleekChat
             app.UseStatusCodePages(async context => { 
                 context.HttpContext.Response.ContentType = "application/json";
                 if (context.HttpContext.Response.StatusCode == 401)
-                    await context.HttpContext.Response.WriteAsync(new FormatHelper().Render("Access denied! You are not signed in."));
+                    await context.HttpContext.Response.WriteAsync(new FormatHelper().Render("Unauthorised! You are not signed in."));
             });
 
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

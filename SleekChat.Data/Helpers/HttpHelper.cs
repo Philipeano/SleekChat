@@ -48,11 +48,13 @@ namespace SleekChat.Data.Helpers
         /// <summary>
         /// An one-word indication of whether the operation succeeded (normal) or failed (error)
         /// </summary>
+        [Required]
         public string Status { get; set; }
 
         /// <summary>
         /// A one-sentence report of the operation's outcome, or any error encountered
         /// </summary>
+        [Required]
         public string Message { get; set; }
 
         /// <summary>

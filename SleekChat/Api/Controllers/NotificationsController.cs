@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SleekChat.Core.Entities;
 using SleekChat.Data.Contracts;
@@ -8,6 +9,10 @@ using SleekChat.Data.Helpers;
 
 namespace SleekChat.Api.Controllers
 {
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseBody))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     [Authorize]
     [ApiController]
     public class NotificationsController : ControllerBase
@@ -36,7 +41,13 @@ namespace SleekChat.Api.Controllers
         /// Fetch all existing notifications, or notifications received by a specific user if 'recipientId' is provided
         /// </summary>
         /// <param name="recipientId">The 'id' of the user whose notifications are to be fetched (Optional)</param>
-        /// <returns>A list of notifications, each with 'id', 'recipient', 'message', 'status' and 'dateReceived' fields</returns>
+        /// <returns>A list of notifications, each with 'id', 'recipient', 'message', 'status' and 'received' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet("api/notifications")]
         public ActionResult GetAll([FromQuery(Name = "recipientId")] string recipientId = "")
         {
@@ -68,6 +79,12 @@ namespace SleekChat.Api.Controllers
         /// </summary>
         /// <param name="id">The 'id' of the notification to be fetched</param>
         /// <returns>A notification with 'id', 'recipient', 'message', 'status' and 'dateReceived' fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet("api/notifications/{id}")]
         public ActionResult GetById([FromRoute] string id)
         {
@@ -95,7 +112,15 @@ namespace SleekChat.Api.Controllers
         /// </summary>
         /// <param name="id">The 'id' of the notification to be updated</param>
         /// <param name="status">The new status of the notification</param>
-        /// <returns>The newly updated notification with 'id', 'recipient', 'message', 'status' and 'dateReceived' fields</returns>
+        /// <returns>The newly updated notification with 'id', 'recipient', 'message', 'status' and 'received' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="403">Forbidden! You are not allowed to perform this operation.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpPatch("api/notifications/{id}")]
         public ActionResult Patch([FromRoute] string id, [FromQuery(Name = "newStatus")] string status)
         {
@@ -142,6 +167,14 @@ namespace SleekChat.Api.Controllers
         /// </summary>
         /// <param name="id">The 'id' of the notification to be deleted</param>
         /// <returns></returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="403">Forbidden! You are not allowed to perform this operation.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpDelete("api/notifications/{id}")]
         public ActionResult Delete([FromRoute] string id)
         {
