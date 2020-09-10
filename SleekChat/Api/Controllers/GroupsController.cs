@@ -9,10 +9,7 @@ using SleekChat.Data.Helpers;
 
 namespace SleekChat.Api.Controllers
 {
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseBody))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
-    [Produces("application/json")]
-    [Consumes("application/json")]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]

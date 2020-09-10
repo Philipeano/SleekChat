@@ -10,9 +10,6 @@ using SleekChat.Data.Helpers;
 
 namespace SleekChat.Api.Controllers
 {
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseBody))]
-    [Produces("application/json")]
-    ////[Consumes("application/json")]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -138,7 +135,6 @@ namespace SleekChat.Api.Controllers
         /// <returns>Authenticated user with 'id', 'username', 'email' and 'registered' (date) fields, along with a 'token' </returns>
         /// <response code="400">Bad request! Check for any error, and try again.</response>
         /// <response code="200">Success! Operation completed successfully</response> 
-        [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [AllowAnonymous]
         [HttpPost("authenticate")]

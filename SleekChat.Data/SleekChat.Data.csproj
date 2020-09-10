@@ -18,7 +18,6 @@
   <ItemGroup>
     <Folder Include="InMemoryDataService\" />
     <Folder Include="Contracts\" />
-    <Folder Include="Helpers\" />
     <Folder Include="SqlServerDataService\" />
   </ItemGroup>
     
