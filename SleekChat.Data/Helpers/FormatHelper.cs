@@ -30,6 +30,18 @@ namespace SleekChat.Data.Helpers
         }
 
 
+        public string Render(string errorMessage)
+        {
+            ResponseBody response = new ResponseBody
+            {
+                Status = "error",
+                Message = errorMessage,
+                Data = null
+            };
+            return response.ToString();
+        }
+
+
         public void RenderJson(KeyValuePair<bool, string> validationResult, out string responseJson)
         {
             responseJson = Render(validationResult).ToString();

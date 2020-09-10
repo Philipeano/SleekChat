@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SleekChat.Core.Entities;
 using SleekChat.Data.Contracts;
@@ -8,6 +9,7 @@ using SleekChat.Data.Helpers;
 
 namespace SleekChat.Api.Controllers
 {
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -33,6 +35,14 @@ namespace SleekChat.Api.Controllers
 
 
         // GET: api/groups
+        /// <summary>
+        /// Fetch all groups
+        /// </summary>
+        /// <returns>A list of groups, each with 'id', 'title', 'purpose', 'creator' and 'created' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet]
         public ActionResult Get()
         {
@@ -41,6 +51,17 @@ namespace SleekChat.Api.Controllers
 
 
         // GET: api/groups/id
+        /// <summary>
+        /// Fetch a group with the specified 'id'
+        /// </summary>
+        /// <param name="id">The 'id' of the group to be fetched</param>
+        /// <returns>A group with 'id', 'title', 'purpose', 'creator' and 'created' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet("{id}")]
         public ActionResult Get(string id)
         {
@@ -61,6 +82,17 @@ namespace SleekChat.Api.Controllers
 
 
         // POST: api/groups
+        /// <summary>
+        /// Create a new group with the fields supplied in 'reqBody'  
+        /// </summary>
+        /// <param name="reqBody">A JSON object containing 'title' and 'purpose' fields</param>
+        /// <returns>The newly created group with 'id', 'title', 'purpose', 'creator' and 'created' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="409">Conflict! A resource with the same identifier already exists.</response>
+        /// <response code="201">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResponseBody))]
         [HttpPost]
         public ActionResult Post([FromBody] GroupReqBody reqBody)
         {
@@ -88,6 +120,22 @@ namespace SleekChat.Api.Controllers
 
 
         // PUT: api/groups/id
+        /// <summary>
+        /// Update an existing group with the fields supplied in 'reqBody'  
+        /// </summary>
+        /// <param name="id">The 'id' of the group to be updated</param>
+        /// <param name="reqBody">A JSON object containing 'title' and 'purpose' fields</param>
+        /// <returns>The updated group with 'id', 'title', 'purpose', 'creator' and 'created' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="403">Forbidden! You are not allowed to perform this operation.</response>
+        /// <response code="409">Conflict! A resource with the same identifier already exists.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpPut("{id}")]
         public ActionResult Put([FromRoute] string id, [FromBody] GroupReqBody reqBody)
         {
@@ -135,6 +183,19 @@ namespace SleekChat.Api.Controllers
 
 
         // DELETE: api/groups/id
+        /// <summary>
+        /// Delete a group with the specified 'id'   
+        /// </summary>
+        /// <param name="id">The 'id' of the group to be deleted</param>
+        /// <returns></returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="403">Forbidden! You are not allowed to perform this operation.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] string id)
         {

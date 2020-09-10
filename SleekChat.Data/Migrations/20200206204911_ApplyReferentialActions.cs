@@ -36,7 +36,7 @@ namespace SleekChat.Data.Migrations
                 column: "MemberId",
                 principalTable: "Users",
                 principalColumn: "UserId",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.NoAction); // Cascade
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Messages_Users_SenderId",
@@ -44,7 +44,7 @@ namespace SleekChat.Data.Migrations
                 column: "SenderId",
                 principalTable: "Users",
                 principalColumn: "UserId",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.NoAction); // Cascade
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Notifications_Users_RecipientId",
@@ -52,7 +52,7 @@ namespace SleekChat.Data.Migrations
                 column: "RecipientId",
                 principalTable: "Users",
                 principalColumn: "UserId",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.NoAction); // Cascade
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

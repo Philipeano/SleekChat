@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SleekChat.Core.Entities;
@@ -34,6 +35,15 @@ namespace SleekChat.Api.Controllers
 
 
         // GET: api/users
+        /// <summary>
+        /// Fetch all registered users
+        /// </summary>
+        /// <returns>A list of users, each with 'id', 'username', 'email' and 'registered' (date) fields </returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet]
         public ActionResult Get()
         {
@@ -42,6 +52,18 @@ namespace SleekChat.Api.Controllers
 
 
         // GET: api/users/id
+        /// <summary>
+        /// Fetch a user with the specified 'id'
+        /// </summary>
+        /// <param name="id">The 'id' of the user to be fetched</param>
+        /// <returns>A user with 'id', 'username', 'email' and 'registered' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet("{id}")]
         public ActionResult Get(string id)
         {
@@ -62,9 +84,19 @@ namespace SleekChat.Api.Controllers
 
 
         // POST: api/users/register
+        /// <summary>
+        /// Register a new user with the fields supplied in 'reqBody'  
+        /// </summary>
+        /// <param name="reqBody">A JSON object containing 'username', 'email', 'password' and 'confirmPassword' fields</param>
+        /// <returns>The newly created user with 'username', 'email', 'password' and 'registered' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="409">Conflict! A resource with the same identifier already exists.</response>
+        /// <response code="201">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResponseBody))]
         [AllowAnonymous]
         [HttpPost("register")]
-        public ActionResult Register([FromBody] UserReqBody reqBody)
+        public ActionResult<ResponseBody> Register([FromBody] UserReqBody reqBody)
         {
             (string username, string email, string password, string cPassword) = reqBody;
 
@@ -96,6 +128,14 @@ namespace SleekChat.Api.Controllers
 
 
         // POST: api/users/authenticate
+        /// <summary>
+        /// Sign in a user with 'username' and 'password' supplied in 'reqBody'
+        /// </summary>
+        /// <param name="reqBody">A JSON object containing 'username' and 'password' fields</param>
+        /// <returns>Authenticated user with 'id', 'username', 'email' and 'registered' (date) fields, along with a 'token' </returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public ActionResult Authenticate([FromBody] AuthReqBody reqBody)
@@ -117,6 +157,23 @@ namespace SleekChat.Api.Controllers
 
 
         // PUT: api/users/id
+        /// <summary>
+        /// Update an existing user with the fields supplied in 'reqBody'  
+        /// </summary>
+        /// <param name="id">The 'id' of the user to be updated</param>
+        /// <param name="reqBody">A JSON object containing 'username', 'email', 'password' and 'confirmPassword' fields</param>
+        /// <returns>The updated user with 'username', 'email', 'password' and 'registered' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="403">Forbidden! You are not allowed to perform this operation.</response>
+        /// <response code="409">Conflict! A resource with the same identifier already exists.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpPut("{id}")]
         public ActionResult Put([FromRoute] string id, [FromBody] UserReqBody reqBody)
         {
@@ -170,6 +227,20 @@ namespace SleekChat.Api.Controllers
 
 
         // DELETE: api/users/id
+        /// <summary>
+        /// Delete a user with the specified 'id'   
+        /// </summary>
+        /// <param name="id">The 'id' of the user to be deleted</param>
+        /// <returns></returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="403">Forbidden! You are not allowed to perform this operation.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] string id)
         {

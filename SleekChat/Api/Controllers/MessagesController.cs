@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SleekChat.Core.Entities;
 using SleekChat.Data.Contracts;
@@ -8,6 +9,7 @@ using SleekChat.Data.Helpers;
 
 namespace SleekChat.Api.Controllers
 {
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
     [Authorize]
     [ApiController]
     public class MessagesController : ControllerBase
@@ -36,6 +38,17 @@ namespace SleekChat.Api.Controllers
 
 
         // GET: api/messages?senderId
+        /// <summary>
+        /// Fetch all existing messages, or messages sent by a specific user if 'senderId' is provided
+        /// </summary>
+        /// <param name="senderId">The 'id' of the user whose sent messages are to be fetched (Optional)</param>
+        /// <returns>A list of messages, each with 'id', 'content', 'status', 'priority', 'group', 'sender' and 'dateSent' fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet("api/messages")]
         public ActionResult GetAll([FromQuery(Name = "senderId")] string senderId = "")
         {
@@ -62,6 +75,17 @@ namespace SleekChat.Api.Controllers
 
 
         // GET: api/messages/id
+        /// <summary>
+        /// Fetch a message with the specified 'msgId'
+        /// </summary>
+        /// <param name="msgId">The 'id' of the message to be fetched</param>
+        /// <returns>A message with 'id', 'content', 'status', 'priority', 'group', 'sender' and 'sent' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet("api/messages/{msgId}")]
         public ActionResult GetById([FromRoute] string msgId)
         {
@@ -84,6 +108,18 @@ namespace SleekChat.Api.Controllers
 
 
         //GET: api/groups/id/messages?senderId
+        /// <summary>
+        /// Fetch all messages for the group, or messages sent to the group by a specific user if 'senderId' is provided
+        /// </summary>
+        /// <param name="grpId">The 'id' of the group for which messages are to be fetched</param>
+        /// <param name="senderId">The 'id' of the user whose sent messages are to be fetched (Optional)</param>
+        /// <returns>A list of messages, each with 'id', 'content', 'status', 'priority', 'group', 'sender' and 'sent' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet("api/groups/{grpId}/messages")]
         public ActionResult GetByGroupId([FromRoute] string grpId, [FromQuery(Name = "senderId")] string senderId = "")
         {
@@ -125,6 +161,21 @@ namespace SleekChat.Api.Controllers
 
 
         // POST: api/groups/id/messages
+        /// <summary>
+        /// Send a new message to the specified group using the fields supplied in 'reqBody'  
+        /// </summary>
+        /// <param name="grpId">The 'id' of the group to which the message will be posted</param>
+        /// <param name="reqBody">A JSON object containing 'content' and 'priority' fields</param>
+        /// <returns>The newly posted message with 'id', 'content', 'status', 'priority', 'group', 'sender' and 'sent' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="403">Forbidden! You are not allowed to perform this operation.</response>
+        /// <response code="201">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResponseBody))]
         [HttpPost("api/groups/{grpId}/messages")]
         public ActionResult Post([FromRoute] string grpId, [FromBody] MsgRequestBody reqBody)
         {
@@ -169,6 +220,21 @@ namespace SleekChat.Api.Controllers
 
 
         // PUT: api/groups/id/messages/id
+        /// <summary>
+        /// Update a message with id 'msgId' in the group with id 'grpId', using the fields in 'reqBody'  
+        /// </summary>
+        /// <param name="grpId">The 'id' of the group to which the message was sent</param>
+        /// <param name="msgId">The 'id' of the message to be updated</param>
+        /// <param name="reqBody">A JSON object containing 'content' and 'priority' fields</param>
+        /// <returns>The newly updated message with 'id', 'content', 'status', 'priority', 'group', 'sender' and 'sent' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="403">Forbidden! You are not allowed to perform this operation.</response>
+        /// <response code="201">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResponseBody))]
         [HttpPut("api/groups/{grpId}/messages/{msgId}")]
         public ActionResult Put([FromRoute] string grpId, [FromRoute] string msgId, [FromBody] MsgRequestBody reqBody)
         {
@@ -235,6 +301,20 @@ namespace SleekChat.Api.Controllers
 
 
         // DELETE: api/groups/id/messages/id
+        /// <summary>
+        /// Delete a message with id 'msgId', which was previously sent to the group with id 'grpId'  
+        /// </summary>
+        /// <param name="grpId">The 'id' of the group to which the message was sent</param>
+        /// <param name="msgId">The 'id' of the message to be deleted</param>
+        /// <returns></returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="403">Forbidden! You are not allowed to perform this operation.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpDelete("api/groups/{grpId}/messages/{msgId}")]
         public ActionResult Delete([FromRoute] string grpId, [FromRoute] string msgId)
         {

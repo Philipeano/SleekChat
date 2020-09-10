@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SleekChat.Core.Entities;
 using SleekChat.Data.Contracts;
@@ -8,6 +9,7 @@ using SleekChat.Data.Helpers;
 
 namespace SleekChat.Api.Controllers
 {
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ResponseBody))]
     [Authorize]
     [ApiController]
     public class MembershipsController : ControllerBase
@@ -34,6 +36,17 @@ namespace SleekChat.Api.Controllers
 
 
         // GET: api/memberships?memberId
+        /// <summary>
+        /// Fetch all existing memberships, or a specific user's memberships if 'memberId' is provided
+        /// </summary>
+        /// <param name="memberId">The 'id' of the user whose memberships are to be fetched (Optional)</param>
+        /// <returns>A list of memberships, each with 'id', 'group', 'member', 'role' and 'dateJoined' fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet("api/memberships")]
         public ActionResult Get([FromQuery(Name = "memberId")] string memberId = "")
         {
@@ -60,6 +73,17 @@ namespace SleekChat.Api.Controllers
 
 
         //GET: api/groups/id/memberships
+        /// <summary>
+        /// Fetch all memberships for the group with specified 'grpId'
+        /// </summary>
+        /// <param name="grpId">The 'id' of the group whose memberships are to be fetched</param>
+        /// <returns>A list of memberships, each with 'id', 'group', 'member', 'role' and 'joined' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpGet("api/groups/{grpId}/memberships")]
         public ActionResult GetByGroupId([FromRoute] string grpId)
         {
@@ -81,6 +105,22 @@ namespace SleekChat.Api.Controllers
 
 
         // POST: api/groups/id/memberships
+        /// <summary>
+        /// Add a user whose 'id' is supplied in 'reqBody' to the group with id 'grpId' 
+        /// </summary>
+        /// <param name="grpId">The 'id' of the group to which the new member will be added</param>
+        /// <param name="reqBody">A JSON object containing the 'id' of the user to be added</param>
+        /// <returns>The new membership with 'id', 'group', 'member', 'role' and 'joined' (date) fields</returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="403">Forbidden! You are not allowed to perform this operation.</response>
+        /// <response code="409">Conflict! A resource with the same identifier already exists.</response>
+        /// <response code="201">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status409Conflict, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ResponseBody))]
         [HttpPost("api/groups/{grpId}/memberships")]
         public ActionResult Post([FromRoute] string grpId, [FromBody] MbrshpReqBody reqBody)
         {
@@ -136,6 +176,20 @@ namespace SleekChat.Api.Controllers
 
 
         // DELETE: api/groups/id/memberships?memberId
+        /// <summary>
+        /// Remove a user with id 'memberId' from the group with id 'grpId' 
+        /// </summary>
+        /// <param name="grpId">The 'id' of the group from which the user will be removed</param>
+        /// <param name="memberId">The 'id' of the user to be removed from the group</param>
+        /// <returns></returns>
+        /// <response code="400">Bad request! Check for any error, and try again.</response>
+        /// <response code="401">Unauthorised! You are not signed in.</response>
+        /// <response code="404">Not found! The specified resource does not exist.</response>
+        /// <response code="403">Forbidden! You are not allowed to perform this operation.</response>
+        /// <response code="200">Success! Operation completed successfully</response> 
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ResponseBody))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseBody))]
         [HttpDelete("api/groups/{grpId}/memberships")]
         public ActionResult Delete([FromRoute] string grpId, [FromQuery(Name = "memberId")] string memberId)
         {
@@ -186,7 +240,7 @@ namespace SleekChat.Api.Controllers
                 return Ok(formatter.Render(null, "Membership", Operation.Deleted));
             }
 
-            formatter.RenderJson(validator.Result("Sorry, you must either be the creator of this group, or the member to be removed."), out string responseTxt);
+            formatter.RenderJson(validator.Result("Sorry, you must be either the creator of this group, or the member to be removed."), out string responseTxt);
             httpHelper.Forbid(Response, responseTxt);
             return null;
         }

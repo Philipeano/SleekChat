@@ -53,20 +53,20 @@ namespace SleekChat.Data.Helpers
             try
             {
                 byte[] keyInBytes = Encoding.UTF8.GetBytes(config.Value.SecretKey);
-            SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
+                SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
                 {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
                         new Claim(ClaimTypes.NameIdentifier, userId.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(3),
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(keyInBytes),
-                    SecurityAlgorithms.HmacSha256Signature)
-            };
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken token = tokenHandler.CreateToken(descriptor);
-            return tokenHandler.WriteToken(token);
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(3),
+                    SigningCredentials = new SigningCredentials(
+                        new SymmetricSecurityKey(keyInBytes),
+                        SecurityAlgorithms.HmacSha256Signature)
+                };
+                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+                SecurityToken token = tokenHandler.CreateToken(descriptor);
+                return tokenHandler.WriteToken(token);
             }
             catch
             {
