@@ -1,8 +1,8 @@
 # SleekChat
 
 <!-- Include relevant badges here -->
-
-
+[![Maintainability](https://api.codeclimate.com/v1/badges/c533f0a887566fb5e6ea/maintainability)](https://codeclimate.com/github/Philipeano/SleekChat/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/c533f0a887566fb5e6ea/test_coverage)](https://codeclimate.com/github/Philipeano/SleekChat/test_coverage)
 
 ## Overview
 SleekChat is a simple REST API that enables friends and colleagues create groups for messaging. 
