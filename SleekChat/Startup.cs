@@ -58,7 +58,7 @@ namespace SleekChat
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x =>
             {
-                // x.RequireHttpsMetadata = env.IsProduction(); // True for production, otherwise False
+                //x.RequireHttpsMetadata = env.IsProduction();
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
