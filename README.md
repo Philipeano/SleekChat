@@ -78,4 +78,4 @@ This version of the app is strictly a back-end service that can be consumed with
 
 
 ## License
-[MIT © Philip Newman.](../LICENSE)
+[MIT © Philip Newman.](https://opensource.org/licenses/MIT)
