@@ -45,7 +45,7 @@ namespace SleekChat
 
             services
                 .AddDbContextPool<SleekChatContext>(options => options
-                .UseSqlServer(Configuration.GetConnectionString("SleekChatConnStr")));
+                .UseSqlServer(Configuration.GetConnectionString("SleekChatAzureConnStr")));
 
             IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
