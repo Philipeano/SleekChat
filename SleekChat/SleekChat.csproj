@@ -42,4 +42,8 @@
   <ItemGroup>
     <None Include="SleekChat.csproj" />
   </ItemGroup>
+
+  <Target Name="PrePublishTarget" AfterTargets="Publish">
+	<Exec Command="dotnet ef database update" />
+  </Target>	
 </Project>
