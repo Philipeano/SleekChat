@@ -342,3 +342,6 @@ ASALocalRun/
 *.dll
 *deps.json
 */netcoreapp3.1/
+
+# Unused configuration files
+*.config/
