@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>SleekChat</name>
+        <name>sleekchat</name>
     </assembly>
     <members>
         <member name="M:SleekChat.Api.Controllers.GroupsController.Get">

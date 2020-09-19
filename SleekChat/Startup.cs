@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
@@ -50,6 +51,14 @@ namespace SleekChat
             IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             AppSettings appSettings = appSettingsSection.Get<AppSettings>();
+
+
+            //IConfigurationProvider appEnvVariables = new EnvironmentVariablesConfigurationProvider();
+            //appEnvVariables.Load();
+            //Console.WriteLine($"Environment Variables: {appEnvVariables}");            
+            //services.Configure<AppSettings>((IConfiguration)appEnvVariables);
+            //AppSettings appSettings = (AppSettings)appEnvVariables;
+
 
             byte[] keyInBytes = Encoding.UTF8.GetBytes(appSettings.SecretKey);
 
