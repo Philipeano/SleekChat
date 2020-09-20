@@ -4,11 +4,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c533f0a887566fb5e6ea/test_coverage)](https://codeclimate.com/github/Philipeano/SleekChat/test_coverage)
 
 ## Overview
-SleekChat is a simple REST API that enables friends and colleagues create groups for messaging. 
-This version of the app is strictly a back-end service that can be consumed with any HTTP client. 
-
-- View the full API documentation [here](https://sleekchat.azurewebsites.net/index.html)  
-- Access the hosted API [here](https://sleekchat.azurewebsites.net/api).
+SleekChat is a simple app that enables friends and colleagues create groups for messaging. This version of the app is a REST API that can be consumed with any HTTP client. The features are outlined below, while the full API documentation is available [here](https://sleekchat.azurewebsites.net/index.html).
 
 
 
@@ -27,6 +23,8 @@ This version of the app is strictly a back-end service that can be consumed with
 
 ## Endpoints
 
+Base URL for all endpoints: ```https://sleekchat.azurewebsites.net/api```
+ 
 | Endpoint URL       | Method    | Functionality   |
 | :----------------- | :------------- | :-------------- |
 |**_USERS_**           |        |                               |
