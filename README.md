@@ -1,6 +1,5 @@
 # SleekChat
 
-<!-- Include relevant badges here -->
 [![Maintainability](https://api.codeclimate.com/v1/badges/c533f0a887566fb5e6ea/maintainability)](https://codeclimate.com/github/Philipeano/SleekChat/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c533f0a887566fb5e6ea/test_coverage)](https://codeclimate.com/github/Philipeano/SleekChat/test_coverage)
 
@@ -8,8 +7,8 @@
 SleekChat is a simple REST API that enables friends and colleagues create groups for messaging. 
 This version of the app is strictly a back-end service that can be consumed with any HTTP client. 
 
-- View the full API documentation [here](/apidocs)  
-- Access the hosted API [here](/api).
+- View the full API documentation [here](https://sleekchat.azurewebsites.net/index.html)  
+- Access the hosted API [here](https://sleekchat.azurewebsites.net/api).
 
 
 
@@ -69,10 +68,9 @@ This version of the app is strictly a back-end service that can be consumed with
 
 - Primary language: ```C#``` 
 - Server technology: ```ASP.Net Core```
-- Database system: ```Microsoft SQL Server```
+- Database system: ```Microsoft SQL Server``` & ```Azure SQL Database```
 - ORM: ```Entity Framework Core```
 - API documentation: ```Swashbuckle.AspNetCore```
-- IDE: ```Visual Studio``` & ```Visual Studio Code```
 - Target Runtime: ```.Net Core 3.1.1```
 
 
